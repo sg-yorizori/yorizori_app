@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:yorizori_app/Camera/camera.dart';
 import 'package:yorizori_app/Keep/keep.dart';
-import 'package:yorizori_app/Recipe/recipe.dart';
+//import 'package:yorizori_app/Recipe/recipe.dart';
+import 'package:yorizori_app/Home/home.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+
+import 'package:flutter/foundation.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,8 +19,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: Colors.deepOrange,
       ),
+      //home: Home(),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -35,8 +39,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
 
-  final List _title = ["Home", "Camera", "Keep"];
-  final List<Widget> _menu = [Recipe(), Camera(), Keep()];
+  final List _title = ["YoriZori", "Camera", "Keep"];
+  final List<Widget> _menu = [Home(), Camera(), Keep()];
 
   void _onTap(int index) {
     setState(() {
@@ -58,7 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: _onTap,
         currentIndex: _currentIndex,
         items: [
-          new BottomNavigationBarItem(icon: Icon(Icons.home), label: _title[0]),
+          new BottomNavigationBarItem(
+              icon: Icon(Icons.home), label: _title[0]),
           new BottomNavigationBarItem(
               icon: Icon(Icons.camera), label: _title[1]),
           new BottomNavigationBarItem(

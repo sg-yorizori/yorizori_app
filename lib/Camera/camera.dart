@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 import './ingre.dart';
-import 'package:yorizori_app/Recipe/recipe.dart';
+//import 'package:yorizori_app/Recipe/recipe.dart';
+import 'package:yorizori_app/Home/home.dart';
 
 PickedFile? image_cam;
 
@@ -69,7 +70,7 @@ class _CameraState extends State<Camera> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Recipe()),
+                MaterialPageRoute(builder: (context) => Home()),
               );
             },
             child: const Icon(Icons.navigation),
