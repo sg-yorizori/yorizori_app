@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:google_fonts/google_fonts.dart';
 
-Color kPrimaryColor = Color(0xFF27AE60);
+Color kPrimaryColor = Color(0xffFA4A0C);
 
 BoxShadow kBoxShadow = BoxShadow(
   color: Colors.grey.withOpacity(0.2),
@@ -115,7 +115,7 @@ buildRecipeSubTitle(String text){
     ),
   );
 }
-
+/*
 buildCalories(String text){
   return Text(
     text,
@@ -125,4 +125,4 @@ buildCalories(String text){
       fontWeight: FontWeight.bold,
     ),
   );
-}
+}*/
