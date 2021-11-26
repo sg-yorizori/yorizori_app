@@ -1,6 +1,8 @@
 name: yorizori_app
 description: A new Flutter project.
 
+# test
+
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -49,6 +51,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/data.json
+    - assets/ingre.json
+    # - assets/images/test1.png
+    # - assets/images/test2.png
+    - assets/images/test3.png
+    - assets/images/logo.png
+    - assets/images/background.png
+    - assets/images/background2.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

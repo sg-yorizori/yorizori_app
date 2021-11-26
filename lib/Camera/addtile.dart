@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import './ingre.dart';
 import './camera.dart';
+
+import './ingrelist.dart';
 
 class AddItem {
   String name;
@@ -18,28 +19,6 @@ List<AddItem> ItemList = [
   AddItem("f")
 ];
 
-class AddTile extends StatelessWidget {
-  final VoidCallback flag_update;
-
-  AddTile(this.flag_update);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-        leading: Icon(Icons.add),
-        title: Text('test'),
-        subtitle: Text("Add"),
-        trailing: Icon(Icons.add),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SecondRoute(flag_update)),
-          );
-          // flag_update();
-        });
-  }
-}
-
 class SecondRoute extends StatelessWidget {
   final VoidCallback flag_update;
 
@@ -49,7 +28,7 @@ class SecondRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Second Route"),
+        title: const Text("원하는 재료를 추가하세요."),
       ),
       body: BodyLayout(flag_update),
     );
@@ -73,7 +52,7 @@ class BodyLayout extends StatelessWidget {
             subtitle: Text("test"),
             trailing: Icon(Icons.food_bank_sharp),
             onTap: () {
-              ingreList.add(Ingre(ItemList[index].name));
+              ingre_list.add(IngreList(name: ItemList[index].name));
               flag_update();
               Navigator.pop(context);
             });
