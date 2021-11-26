@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:google_fonts/google_fonts.dart';
 
-Color kPrimaryColor = Color(0xFF27AE60);
+Color kPrimaryColor = Color(0xffFA4A0C);
 
 BoxShadow kBoxShadow = BoxShadow(
   color: Colors.grey.withOpacity(0.2),
@@ -20,11 +20,6 @@ buildTextTitleVariation1(String text){
         fontWeight: FontWeight.bold,
         color: Color(0xffFA4A0C),
       )
-      // style: GoogleFonts.breeSerif(
-      //   fontSize: 36,
-      //   fontWeight: FontWeight.w900,
-      //   color: Colors.black,
-      // ),
     ),
   );
 }
@@ -37,7 +32,7 @@ buildTextTitleVariation2(String text, bool opacity){
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
-        color: opacity ? Colors.grey[400] : Color(0xffFA4A0C),
+        color: opacity ? Colors.grey[800] : Color(0xffFA4A0C),
       ),
     ),
   );
@@ -116,7 +111,7 @@ buildRecipeSubTitle(String text){
   );
 }
 
-buildCalories(String text){
+buildBottomRecipe(String text){
   return Text(
     text,
     style: TextStyle(

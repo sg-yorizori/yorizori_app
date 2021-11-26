@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yorizori_app/Camera/camera.dart';
 
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
@@ -70,132 +69,148 @@ class _RecipeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("재료와 레시피를 요리조리에서 찾아봐요"),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Center(
+            child: Text(
+                "재료와 레시피를 요리조리 찾아봐요",
+              style: TextStyle(color: Colors.grey[400])
+            ),
+        ),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.search), onPressed: () {
-            showSearch(context: context, delegate: DataSearch());
-          })
-        ],
+          IconButton(
+            icon: Icon(Icons.search, color: Colors.black),
+            onPressed: () {
+              showSearch(context: context, delegate: DataSearch());
+            }
+          )
+        ]
+        /*
+        title: Center(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            width: 350,
+            decoration: BoxDecoration(
+              color: Colors.white,
+                borderRadius: BorderRadius.circular(20)
+            ),
+            child: TextFormField(
+              decoration: InputDecoration(
+                //labelText: '재료와 레시피를 요리조리 찾아봐요',
+                icon: Icon(Icons.search),
+                contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+
+              ),
+            ),
+          ),
+        ),*/
       ),
       drawer: Drawer(),
 
-      body:
-        Container(
-          child: FutureBuilder(
-            future: _getRecipes(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.data == null) {
-                return Container(
-                    child: Center(
-                        child: Text("Loading...")
-                    )
-                );
-              } else {
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            snapshot.data[index].mainImage[0]
-                        ),
+      body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      buildTextTitleVariation1('인기 메뉴'),
+                      buildTextSubTitleVariation1('오늘은 이런 음식 어때요?')
+
+                    ],
+                  ),
+                ),
+
+                SizedBox(
+                  height: 20,
+                ),
+
+                Container(
+                  height: 350,
+                  // child: Expanded(
+                  child: FutureBuilder(
+                      future: _getRecipes(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.data == null) {
+                          return Container(
+                              child: Center(child: Text("로딩중...")));
+                        } else {
+                          return ListView(
+                                physics: BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                children: buildPopulars(snapshot.data),
+                              );
+                          //);
+                        }
+                      }
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+
+                      buildTextTitleVariation2('따끈따끈', false),
+
+                      SizedBox(
+                        width: 8,
                       ),
-                      title: Text(snapshot.data[index].title),
-                      subtitle: Text("레시피 보기"),
-                      onTap: () {
-                        Navigator.push( context,
-                            new MaterialPageRoute(builder: (context) => DetailPage(snapshot.data[index]))
-                        );
-                      },
-                    );
-                  },
-                );
-              }
-            },
-          ),
-        ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {},
-          backgroundColor: Colors.deepOrangeAccent,
-          icon: Icon(
-            Icons.add_circle_outline,
-            color: Colors.white,
-            size: 40,
-          ),
-          label: Text(
-            "레시피 추가",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+
+                      buildTextTitleVariation2('레시피', true),
+
+                    ],
+                  ),
+                ),
+
+                Container(
+                  height: 190,
+                  child: FutureBuilder(
+                      future: _getRecipes(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.data == null) {
+                          return Container(
+                              child: Center(child: Text("로딩중...")));
+                        } else {
+                          return ListView(
+                            physics: BouncingScrollPhysics(),
+                            children: buildRecents(snapshot.data),
+                          );
+                          //);
+                        }
+                      }
+                  ),
+                ),
+              ]
           )
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(Icons.add, size: 30.0),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.deepOrangeAccent,
+          shape: CircleBorder(side: BorderSide (color: Colors.deepOrangeAccent, width: 3.0))
       ),
     );
   }
-}
 
-/* SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-
-            child: Column(
-                children: [
-
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                        buildTextTitleVariation1('인기 메뉴'),
-                        buildTextSubTitleVariation1('오늘은 이런 음식 어때요?'),
-
-                      ],
-                    ),
-                  ),
-
-                  Container(
-                    height: 350,
-                    // child: Expanded(
-                    child: FutureBuilder(
-                        future: _getRecipes(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot snapshot) {
-                          if (snapshot.data == null) {
-                            return Container(
-                                child: Center(child: Text("Loading...")));
-                          } else {
-                            return ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListView(
-                                  physics: BouncingScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  children: buildRecipes(snapshot.data),
-                                );
-                              },
-                            );
-                          }
-                        }
-                    ),
-                  )
-                ]
-            )
-        )
-    );
-  }
-
-  List<Widget> buildRecipes(List<RecipeList> getRecipes){
-    print(getRecipes.length);
+  List<Widget> buildPopulars(List<RecipeList> getRecipes){
+    //print(getRecipes.length);
     List<Widget> list = [];
     for (var i = 0; i < getRecipes.length; i++) {
-      list.add(buildRecipe(getRecipes[i], i));
+      list.add(buildPopular(getRecipes[i], i));
     }
     return list;
   }
 
-  Widget buildRecipe(RecipeList recipe, int index){
+  Widget buildPopular(RecipeList recipe, int index){
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -225,16 +240,12 @@ class _RecipeState extends State<Home> {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(recipe.mainImage[0]),
+                      image: NetworkImage(recipe.mainImage[0]),
                       fit: BoxFit.contain,
                     ),
                   ),
                 ),
               ),
-            ),
-
-            SizedBox(
-              height: 8,
             ),
 
             buildRecipeTitle(recipe.title),
@@ -245,7 +256,7 @@ class _RecipeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
 
-                buildCalories("조회수 " + recipe.views.toString() + " 회"),
+                buildBottomRecipe("조회수 " + recipe.views.toString() + " 회"),
 
                 Icon(
                   Icons.favorite_border,
@@ -255,9 +266,78 @@ class _RecipeState extends State<Home> {
             ),
 
           ],
+
         ),
       ),
     );
   }
+
+  List<Widget> buildRecents (List<RecipeList> getRecipes){
+    //print(getRecipes.length);
+    List<Widget> list = [];
+    for (var i = 0; i < getRecipes.length; i++) {
+      list.add(buildRecent(getRecipes[i], i));
+    }
+    return list;
+  }
+
+  Widget buildRecent(RecipeList recipe, int index){
+    return Container(
+      margin: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+        boxShadow: [kBoxShadow],
+      ),
+      child: Row(
+        children: [
+
+          Container(
+            height: 160,
+            width: 160,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(recipe.mainImage[0]),
+                fit: BoxFit.fitHeight,
+              ),
+            ),
+          ),
+
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+
+                  buildRecipeTitle(recipe.title),
+
+                  buildTextSubTitleVariation2("작성자 " + recipe.writer),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+
+                      buildBottomRecipe("레시피 보기"),
+
+                      Icon(
+                        Icons.favorite_border,
+                      )
+
+                    ],
+                  ),
+
+                ],
+              ),
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+
 }
-*/
