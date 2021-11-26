@@ -15,7 +15,6 @@ class DetailPage extends StatelessWidget {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.deepOrange,
-        brightness: Brightness.light,
 
         title: Text(
             "레시피 보기",
@@ -86,6 +85,7 @@ class DetailPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(bottom: 8),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                           Align(
                             alignment: Alignment.centerLeft,

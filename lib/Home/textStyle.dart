@@ -20,11 +20,6 @@ buildTextTitleVariation1(String text){
         fontWeight: FontWeight.bold,
         color: Color(0xffFA4A0C),
       )
-      // style: GoogleFonts.breeSerif(
-      //   fontSize: 36,
-      //   fontWeight: FontWeight.w900,
-      //   color: Colors.black,
-      // ),
     ),
   );
 }
@@ -37,7 +32,7 @@ buildTextTitleVariation2(String text, bool opacity){
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
-        color: opacity ? Colors.grey[400] : Color(0xffFA4A0C),
+        color: opacity ? Colors.grey[800] : Color(0xffFA4A0C),
       ),
     ),
   );
@@ -115,8 +110,8 @@ buildRecipeSubTitle(String text){
     ),
   );
 }
-/*
-buildCalories(String text){
+
+buildBottomRecipe(String text){
   return Text(
     text,
     style: TextStyle(
@@ -125,4 +120,4 @@ buildCalories(String text){
       fontWeight: FontWeight.bold,
     ),
   );
-}*/
+}

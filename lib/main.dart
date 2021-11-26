@@ -3,8 +3,6 @@ import 'package:yorizori_app/Camera/camera.dart';
 import 'package:yorizori_app/Keep/keep.dart';
 //import 'package:yorizori_app/Recipe/recipe.dart';
 import 'package:yorizori_app/Home/home.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter/foundation.dart';
 
@@ -52,9 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text(_title[_currentIndex]),
-      ),
+      ),*/
       body: _menu[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
@@ -64,11 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
         currentIndex: _currentIndex,
         items: [
           new BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: _title[0]),
+              icon: Icon(Icons.home, size: 30.0), label: _title[0]),
           new BottomNavigationBarItem(
               icon: Icon(Icons.camera), label: _title[1]),
           new BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: _title[2])
+              icon: Icon(Icons.account_circle), label: _title[2])
         ],
       ),
     );
