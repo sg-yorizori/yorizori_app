@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yorizori_app/Camera/camera.dart';
-import 'package:yorizori_app/Keep/keep.dart';
+import 'package:yorizori_app/User/user_main.dart';
 //import 'package:yorizori_app/Recipe/recipe.dart';
 import 'package:yorizori_app/Home/home.dart';
 import 'dart:io';
@@ -9,39 +9,39 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(YorizoriApp());
 }
 
-class MyApp extends StatelessWidget {
+class YorizoriApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Yorizori',
       theme: ThemeData(
         fontFamily: 'Pretendard',
         primarySwatch: Colors.deepOrange,
       ),
       //home: Home(),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: YorizoriHome(title: 'Yorizori'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class YorizoriHome extends StatefulWidget {
+  YorizoriHome({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _YorizoriHomeState createState() => _YorizoriHomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _YorizoriHomeState extends State<YorizoriHome> {
   int _currentIndex = 0;
 
-  final List _title = ["YoriZori", "Camera", "Keep"];
-  final List<Widget> _menu = [Home(), Camera(), Keep()];
+  final List _title = ["YoriZori", "Camera", "User"];
+  final List<Widget> _menu = [Home(), Camera(), User()];
 
   void _onTap(int index) {
     setState(() {
@@ -52,9 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text(_title[_currentIndex]),
-      ),
+      ),*/
       body: _menu[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
@@ -63,12 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: _onTap,
         currentIndex: _currentIndex,
         items: [
-          new BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: _title[0]),
+          new BottomNavigationBarItem(icon: Icon(Icons.home), label: _title[0]),
           new BottomNavigationBarItem(
               icon: Icon(Icons.camera), label: _title[1]),
           new BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: _title[2])
+              icon: Icon(Icons.person), label: _title[2])
         ],
       ),
     );
