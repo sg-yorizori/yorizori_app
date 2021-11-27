@@ -35,7 +35,7 @@ class UserDetail extends StatelessWidget {
                     height: height * 0.15,
                     child: Stack(
                       children: [
-                        profileRow(context, true),
+                        //profileRow(context,),
                         Positioned(
                           height: height * 0.043,
                           child: FloatingActionButton(
