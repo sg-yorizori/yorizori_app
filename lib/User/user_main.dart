@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yorizori_app/User/profile.dart';
-import 'package:yorizori_app/User/user_detail.dart';
+import 'package:yorizori_app/User/user_setting/setting_main.dart';
 
 class User extends StatefulWidget {
   User({Key? key}) : super(key: key);
@@ -73,19 +73,13 @@ class _UserState extends State<User> {
                   SizedBox(height: height * 0.18, child: profileRow(context)),
                   Container(
                     height: height * 0.03,
-                    margin: EdgeInsets.only(left: width * 0.05, bottom: 5),
+                    margin: EdgeInsets.only(left: width * 0.06, bottom: 5),
                     //color: Colors.grey,
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          child: Text('.'),
-                        ),
-                        CircleAvatar(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          child: Text('.'),
+                        Text(
+                          '👀',
+                          style: TextStyle(fontSize: width * 0.05),
                         )
                       ],
                     ),
