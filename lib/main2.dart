@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
 
   final List _title = ["YoriZori", "Camera", "User"];
-  final List<Widget> _menu = [Home(), Camera(), User()];
+  final List<Widget> _menu = [Home(), Camera(), UserPage()];
 
   void _onTap(int index) {
     setState(() {
