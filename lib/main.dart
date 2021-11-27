@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:yorizori_app/Login/login.dart';
 import 'package:yorizori_app/Login/register_page1.dart';
 import 'package:yorizori_app/Login/splash.dart';
+
 
 import 'package:yorizori_app/Login/test.dart';
 import 'package:yorizori_app/Login/register_page2.dart';
