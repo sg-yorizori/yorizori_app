@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yorizori_app/Camera/camera.dart';
-import 'package:yorizori_app/Keep/keep.dart';
+import 'package:yorizori_app/User/user_main.dart';
 //import 'package:yorizori_app/Recipe/recipe.dart';
 import 'package:yorizori_app/Home/home.dart';
 import 'dart:io';
@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 //   runApp(MyApp_2());
 // }
 
-class MyApp_2 extends StatelessWidget {
+class YorizoriApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -39,8 +39,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
 
-  final List _title = ["YoriZori", "Camera", "Keep"];
-  final List<Widget> _menu = [Home(), Camera(), Keep()];
+  final List _title = ["YoriZori", "Camera", "User"];
+  final List<Widget> _menu = [Home(), Camera(), UserPage()];
 
   void _onTap(int index) {
     setState(() {
@@ -51,9 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text(_title[_currentIndex]),
-      ),
+      ),*/
       body: _menu[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
