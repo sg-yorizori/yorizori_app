@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/User/models/recipe_thumb.dart';
 import 'package:yorizori_app/User/profile.dart';
 import 'package:yorizori_app/User/user_setting/setting_main.dart';
 
@@ -13,8 +14,14 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   var user;
+  List<RecipeThumb> sub_recipe_list = [];
+  List<RecipeThumb> user_bookmark_list = [];
+  List<RecipeThumb> user_upload_list = [];
+
+  int length_sub_recipe_list = 0;
+
   int menuSelected = 0;
-  final items = List.generate(10, (index) => "list $index");
+  final items = List.generate(5, (index) => "list $index");
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +70,7 @@ class _UserPageState extends State<UserPage> {
       extendBodyBehindAppBar: true,
       body: FutureBuilder(
           future: getUser(context, 3), //TODO user id!!!
-          builder: (context, snapshot) {
+          builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData == false) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
@@ -71,7 +78,13 @@ class _UserPageState extends State<UserPage> {
                 child: Text('Error: ${snapshot.error}'),
               );
             }
-            user = snapshot.data;
+
+            var data = snapshot.data;
+            user = data[0];
+            sub_recipe_list = user_bookmark_list = data[1];
+            length_sub_recipe_list = sub_recipe_list.length;
+            user_upload_list = data[2];
+
             return Column(
               children: [
                 SizedBox(
@@ -133,27 +146,7 @@ class _UserPageState extends State<UserPage> {
                                             Text(items[index])
                                           ],
                                         ));
-                                  })
-                              /*Row(
-                            //TODO 최근 본 레시피
-                            children: [
-                              Container(
-                                height: 90,
-                                width: 90,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 4,
-                                          offset: Offset(2, 4))
-                                    ]),
-                              )
-                            ],
-                          ),*/
-                              ),
+                                  })),
                         )
                       ],
                     ),
@@ -173,6 +166,8 @@ class _UserPageState extends State<UserPage> {
                             icon: bookmark[menuSelected],
                             onPressed: () {
                               setState(() {
+                                sub_recipe_list = user_bookmark_list;
+                                length_sub_recipe_list = sub_recipe_list.length;
                                 menuSelected = 0;
                               });
                             },
@@ -181,6 +176,8 @@ class _UserPageState extends State<UserPage> {
                             icon: wrote[menuSelected],
                             onPressed: () {
                               setState(() {
+                                sub_recipe_list = user_upload_list;
+                                length_sub_recipe_list = sub_recipe_list.length;
                                 menuSelected = 1;
                               });
                             },
@@ -197,59 +194,73 @@ class _UserPageState extends State<UserPage> {
                 Expanded(
                   child: ScrollConfiguration(
                     behavior: NoGlow(),
-                    child: ListView.builder(
-                        physics: const BouncingScrollPhysics(
-                            parent: AlwaysScrollableScrollPhysics()),
-                        padding: EdgeInsets.only(
-                            top: 0, left: width * 0.06, right: width * 0.06),
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          return Dismissible(
-                            direction: DismissDirection.endToStart,
-                            key: Key(items[index]),
-                            onDismissed: (direction) {
-                              setState(() {
-                                items.removeAt(index);
-                              });
-                            },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(vertical: 8),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2),
-                                        blurRadius: 4,
-                                        offset: Offset(2, 4))
-                                  ],
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: ListTile(
-                                title: Text(items[index]),
-                                leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      "https://cdn.ppomppu.co.kr/zboard/data3/2018/0509/m_1525850138_3126_1516635001428.jpg"),
+                    child: ValueListenableBuilder(
+                      valueListenable: ValueNotifier(length_sub_recipe_list),
+                      builder:
+                          (BuildContext context, dynamic value, Widget? child) {
+                        return ListView.builder(
+                            physics: const BouncingScrollPhysics(
+                                parent: AlwaysScrollableScrollPhysics()),
+                            padding: EdgeInsets.only(
+                                top: 0,
+                                left: width * 0.06,
+                                right: width * 0.06),
+                            itemCount: sub_recipe_list.length,
+                            itemBuilder: (context, index) {
+                              return Dismissible(
+                                direction: DismissDirection.endToStart,
+                                key: Key(sub_recipe_list[index].title),
+                                onDismissed: (direction) {
+                                  setState(() {
+                                    sub_recipe_list.removeAt(index);
+                                    //TODO 삭제 request
+                                  });
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.grey.withOpacity(0.2),
+                                            blurRadius: 4,
+                                            offset: Offset(2, 4))
+                                      ],
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: ListTile(
+                                    title: Text(sub_recipe_list[index].title,
+                                        overflow: TextOverflow.ellipsis),
+                                    subtitle: Text(sub_recipe_list[index]
+                                            .views
+                                            .toString() +
+                                        " views"),
+                                    leading: CircleAvatar(
+                                      radius: width * 0.08,
+                                      backgroundImage: NetworkImage(
+                                          sub_recipe_list[index].thumb),
+                                    ),
+                                  ),
                                 ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                              ),
-                            ),
-                            background: Container(
-                              // decoration: BoxDecoration(
-                              //     color: Colors.grey.shade200,
-                              //     borderRadius: BorderRadius.circular(10)),
-                              padding: EdgeInsets.all(20),
-                              alignment: Alignment.centerRight,
-                              child: CircleAvatar(
-                                  backgroundColor: Colors.red,
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  )), //Text("delete")
-                              /*decoration: BoxDecoration(
+                                background: Container(
+                                  // decoration: BoxDecoration(
+                                  //     color: Colors.grey.shade200,
+                                  //     borderRadius: BorderRadius.circular(10)),
+                                  padding: EdgeInsets.all(20),
+                                  alignment: Alignment.centerRight,
+                                  child: CircleAvatar(
+                                      backgroundColor: Colors.red,
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      )), //Text("delete")
+                                  /*decoration: BoxDecoration(
                                   color: Colors.red, shape: BoxShape.circle)*/
-                            ),
-                          );
-                        }),
+                                ),
+                              );
+                            });
+                      },
+                    ),
                   ),
                 )
               ],

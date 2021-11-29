@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:yorizori_app/User/models/recipe_thumb.dart';
 import 'package:yorizori_app/urls.dart';
 
 class User {
@@ -23,8 +24,10 @@ class User {
         bookmark = new List<int>.from(json['bookmark']);
 }
 
-Future<User> getUser(context, userId) async {
-  User user;
+Future<List<dynamic>> getUser(context, userId) async {
+  var user;
+  List<RecipeThumb> bookmark_list = [];
+  List<RecipeThumb> upload_list = [];
 
   final response = await http.post(Uri.parse(UrlPrefix.urls + "users/profile/"),
       headers: <String, String>{
@@ -32,12 +35,18 @@ Future<User> getUser(context, userId) async {
       },
       body: json.encode({"user_id": userId}));
   if (response.statusCode == 200) {
-    Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes))[0];
-
+    Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
     user = User.fromJson(data);
+
+    if (user.bookmark.length != 0)
+      bookmark_list =
+          await getRecipeThumbList(flag: 1, recipe_list: user.bookmark);
+
+    upload_list = await getRecipeThumbList(user_id: userId);
   } else {
-    throw Exception(); //TODO exception handling...
+    throw Exception(
+        'failed get User ' + userId.toString()); //TODO exception handling...
   }
 
-  return user;
+  return [user, bookmark_list, upload_list];
 }
