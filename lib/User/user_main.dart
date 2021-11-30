@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yorizori_app/User/models/recent_view.dart';
+import 'package:yorizori_app/sharedpref.dart';
 import 'package:yorizori_app/User/models/recipe_thumb.dart';
 import 'package:yorizori_app/User/profile.dart';
 import 'package:yorizori_app/User/user_setting/setting_main.dart';
@@ -24,18 +24,24 @@ class _UserPageState extends State<UserPage> {
   @override
   void initState() {
     super.initState();
-    //saveRecentView([2, 4, 8]);
-    //TODO 저장된 recent view 갖고오기
+    saveSharedPrefList([2, 4, 8], "recent_view");
   }
 
   int menuSelected = 0;
   final items = List.generate(5, (index) => "list $index");
+
+  _fetch() async {
+    List<int> recentView = await getSharedPrefList("recent_view");
+    print(recentView);
+  }
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double width = screenSize.width;
     double height = screenSize.height;
+
+    _fetch();
 
     return Scaffold(
       appBar: AppBar(
@@ -123,9 +129,10 @@ class _UserPageState extends State<UserPage> {
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  "https://cdn.ppomppu.co.kr/zboard/data3/2018/0509/m_1525850138_3126_1516635001428.jpg"),
-                                            ),
+                                                backgroundImage: NetworkImage(
+                                                    "http://10.0.2.2:8000/media/profile/4.jpg")
+                                                // "https://cdn.ppomppu.co.kr/zboard/data3/2018/0509/m_1525850138_3126_1516635001428.jpg"),
+                                                ),
                                             Text(items[index])
                                           ],
                                         ));
