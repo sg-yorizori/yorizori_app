@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
-
+import 'package:yorizori_app/urls.dart';
+import 'dart:convert';
 import './test.dart';
+import 'package:http/http.dart' as http;
+import './models/TokenReceiver.dart';
+
+// import 'package:yorizori_app/User/models/user.dart';
+import './models/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -12,6 +20,67 @@ class MyLogin extends StatefulWidget {
 class _MyLoginState extends State<MyLogin> {
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
+
+  var _id;
+  var _pass;
+  var _isLoading;
+
+  userLogin() async {
+    final response = await http.post(
+      Uri.parse(UrlPrefix.urls + "users/login/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "username": _id,
+        "password": _pass,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data != null && mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        print("login true!!");
+
+        TokenReceiver myToken = TokenReceiver.fromJson(data);
+        int id = await idGet(myToken.token);
+        User myUser = await getUser(context, id);
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', myToken.token);
+        prefs.setInt('user_id', id);
+
+        print("getUser:");
+        print(myUser.user_id);
+
+        Navigator.pushNamed(context, 'mainpage');
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      print("login false");
+      print(response.body);
+    }
+  }
+
+  Future<int> idGet(String token) async {
+    String knoxToken = 'Token ' + token;
+    final response = await http.get(
+      Uri.parse(UrlPrefix.urls + "users/user/"),
+      headers: <String, String>{
+        'Authorization': knoxToken,
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['id'];
+    } else {
+      throw Exception();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +142,6 @@ class _MyLoginState extends State<MyLogin> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 )),
-
                             // ******
                             controller: emailController,
                           ),
@@ -106,7 +174,14 @@ class _MyLoginState extends State<MyLogin> {
                               primary: Color(0xffa52d2d),
                             ),
                             onPressed: () {
-                              Navigator.pushNamed(context, 'mainpage');
+                              // Navigator.pushNamed(context, 'mainpage');
+
+                              _id = emailController.text;
+                              _pass = passwordController.text;
+
+                              // print(_id);
+                              // print(_pass);
+                              userLogin();
                             },
                             child: Text(
                               '시작하기',
