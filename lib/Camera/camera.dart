@@ -19,6 +19,7 @@ import 'package:flutter/services.dart' show rootBundle;
 
 PickedFile? image_cam;
 List<IngreList> ingre_list = [];
+var decodedBytes;
 
 class Camera extends StatefulWidget {
   Camera({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _CameraState extends State<Camera> {
   int _flag2 = 1;
 
   var test_file;
-  var decodedBytes;
+
   // List<IngreList> ingre_list = [];
 
   void _flag2_update() {
@@ -55,12 +56,6 @@ class _CameraState extends State<Camera> {
 
         // important!!
         final bytes = await Io.File(image_cam!.path).readAsBytes();
-        // final bytes = await Io.File().readAsBytes();
-
-        // final bytes = await rootBundle.loadString('assets/images/food.png');
-        // final bytes = await Io.File(snapshot.path).readAsBytes();
-
-        // ByteData bytes = await rootBundle.load('assets/images/food.png');
 
         String img64 = base64Encode(bytes);
         print(img64.substring(0, 100));
@@ -82,10 +77,9 @@ class _CameraState extends State<Camera> {
 
             decodedBytes = base64Decode(rlt_img);
             print(data['ingrd']);
-
-            // Image.memory(decodedBytes);
-            // test_file = Io.File("test.png");
-            // test_file.writeAsBytesSync(decodedBytes);
+            print(data['ingrd'].length);
+            print(data['ingrd'][0]);
+            print(data['ingrd'][0]["name"]);
           }
         } else {
           print("camera fail");

@@ -78,6 +78,7 @@ class _MyLoginState extends State<MyLogin> {
         print("LogIn Success");
         SharedPreferences sharedPreferences =
             await SharedPreferences.getInstance();
+
         print(sharedPreferences.getString("token"));
         print(sharedPreferences.getInt("user_id"));
         print(sharedPreferences.getStringList("bookmark"));
