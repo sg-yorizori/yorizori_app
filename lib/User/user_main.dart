@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/User/models/recent_view.dart';
 import 'package:yorizori_app/User/models/recipe_thumb.dart';
 import 'package:yorizori_app/User/profile.dart';
 import 'package:yorizori_app/User/user_setting/setting_main.dart';
@@ -14,11 +15,18 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   var user;
-  List<RecipeThumb> sub_recipe_list = [];
+  List<List<RecipeThumb>> sub_recipe_list = [[], []];
   List<RecipeThumb> user_bookmark_list = [];
   List<RecipeThumb> user_upload_list = [];
 
-  int length_sub_recipe_list = 0;
+  List<RecipeThumb> recent_view_list = [];
+
+  @override
+  void initState() {
+    super.initState();
+    //saveRecentView([2, 4, 8]);
+    //TODO 저장된 recent view 갖고오기
+  }
 
   int menuSelected = 0;
   final items = List.generate(5, (index) => "list $index");
@@ -29,38 +37,12 @@ class _UserPageState extends State<UserPage> {
     double width = screenSize.width;
     double height = screenSize.height;
 
-    List<Widget> bookmark = [
-      Icon(
-        Icons.favorite,
-        size: width * 0.06,
-        color: Theme.of(context).primaryColor,
-      ),
-      Icon(
-        Icons.favorite_outline,
-        size: width * 0.06,
-        color: Theme.of(context).primaryColor,
-      )
-    ];
-
-    List<Widget> wrote = [
-      Icon(
-        Icons.folder_outlined,
-        size: width * 0.06,
-        color: Theme.of(context).primaryColor,
-      ),
-      Icon(
-        Icons.folder,
-        size: width * 0.06,
-        color: Theme.of(context).primaryColor,
-      )
-    ];
-
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.of(context).push(_createRoute());
+                Navigator.of(context).push(_createRoute(user));
               },
               icon: Icon(Icons.grid_view_rounded))
         ],
@@ -81,9 +63,10 @@ class _UserPageState extends State<UserPage> {
 
             var data = snapshot.data;
             user = data[0];
-            sub_recipe_list = user_bookmark_list = data[1];
-            length_sub_recipe_list = sub_recipe_list.length;
+            user_bookmark_list = data[1];
+
             user_upload_list = data[2];
+            sub_recipe_list = [user_bookmark_list, user_upload_list];
 
             return Column(
               children: [
@@ -163,21 +146,29 @@ class _UserPageState extends State<UserPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           IconButton(
-                            icon: bookmark[menuSelected],
+                            icon: Icon(
+                              (menuSelected == 0)
+                                  ? Icons.favorite
+                                  : Icons.favorite_outline,
+                              size: width * 0.06,
+                              color: Theme.of(context).primaryColor,
+                            ),
                             onPressed: () {
                               setState(() {
-                                sub_recipe_list = user_bookmark_list;
-                                length_sub_recipe_list = sub_recipe_list.length;
                                 menuSelected = 0;
                               });
                             },
                           ),
                           IconButton(
-                            icon: wrote[menuSelected],
+                            icon: Icon(
+                              (menuSelected == 0)
+                                  ? Icons.folder_outlined
+                                  : Icons.folder,
+                              size: width * 0.06,
+                              color: Theme.of(context).primaryColor,
+                            ),
                             onPressed: () {
                               setState(() {
-                                sub_recipe_list = user_upload_list;
-                                length_sub_recipe_list = sub_recipe_list.length;
                                 menuSelected = 1;
                               });
                             },
@@ -193,76 +184,73 @@ class _UserPageState extends State<UserPage> {
                 ),
                 Expanded(
                   child: ScrollConfiguration(
-                    behavior: NoGlow(),
-                    child: ValueListenableBuilder(
-                      valueListenable: ValueNotifier(length_sub_recipe_list),
-                      builder:
-                          (BuildContext context, dynamic value, Widget? child) {
-                        return ListView.builder(
-                            physics: const BouncingScrollPhysics(
-                                parent: AlwaysScrollableScrollPhysics()),
-                            padding: EdgeInsets.only(
-                                top: 0,
-                                left: width * 0.06,
-                                right: width * 0.06),
-                            itemCount: sub_recipe_list.length,
-                            itemBuilder: (context, index) {
-                              return Dismissible(
-                                direction: DismissDirection.endToStart,
-                                key: Key(sub_recipe_list[index].title),
-                                onDismissed: (direction) {
-                                  setState(() {
-                                    sub_recipe_list.removeAt(index);
-                                    //TODO 삭제 request
-                                  });
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.grey.withOpacity(0.2),
-                                            blurRadius: 4,
-                                            offset: Offset(2, 4))
-                                      ],
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: ListTile(
-                                    title: Text(sub_recipe_list[index].title,
-                                        overflow: TextOverflow.ellipsis),
-                                    subtitle: Text(sub_recipe_list[index]
-                                            .views
-                                            .toString() +
-                                        " views"),
-                                    leading: CircleAvatar(
-                                      radius: width * 0.08,
-                                      backgroundImage: NetworkImage(
-                                          sub_recipe_list[index].thumb),
-                                    ),
+                      behavior: NoGlow(),
+                      child: ListView.builder(
+                          physics: const BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics()),
+                          padding: EdgeInsets.only(
+                              top: 0, left: width * 0.06, right: width * 0.06),
+                          itemCount: sub_recipe_list[menuSelected].length,
+                          itemBuilder: (context, index) {
+                            return Dismissible(
+                              direction: DismissDirection.endToStart,
+                              key: Key(
+                                  sub_recipe_list[menuSelected][index].title),
+                              onDismissed: (direction) {
+                                setState(() {
+                                  sub_recipe_list[menuSelected].removeAt(index);
+                                  //TODO 삭제 request
+                                });
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(vertical: 8),
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          blurRadius: 4,
+                                          offset: Offset(2, 4))
+                                    ],
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: ListTile(
+                                  title: Text(
+                                      sub_recipe_list[menuSelected][index]
+                                          .title,
+                                      overflow: TextOverflow.ellipsis),
+                                  subtitle: Text(sub_recipe_list[menuSelected]
+                                              [index]
+                                          .views
+                                          .toString() +
+                                      " views"),
+                                  leading: CircleAvatar(
+                                    radius: width * 0.08,
+                                    backgroundImage: (sub_recipe_list[
+                                                    menuSelected][index]
+                                                .thumb !=
+                                            '')
+                                        ? NetworkImage(
+                                            sub_recipe_list[menuSelected][index]
+                                                .thumb)
+                                        : AssetImage('assets/images/wink.png')
+                                            as ImageProvider,
                                   ),
                                 ),
-                                background: Container(
-                                  // decoration: BoxDecoration(
-                                  //     color: Colors.grey.shade200,
-                                  //     borderRadius: BorderRadius.circular(10)),
-                                  padding: EdgeInsets.all(20),
-                                  alignment: Alignment.centerRight,
-                                  child: CircleAvatar(
-                                      backgroundColor: Colors.red,
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                      )), //Text("delete")
-                                  /*decoration: BoxDecoration(
-                                  color: Colors.red, shape: BoxShape.circle)*/
-                                ),
-                              );
-                            });
-                      },
-                    ),
-                  ),
-                )
+                              ),
+                              background: Container(
+                                padding: EdgeInsets.all(20),
+                                alignment: Alignment.centerRight,
+                                child: CircleAvatar(
+                                    backgroundColor: Colors.red,
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    )),
+                              ),
+                            );
+                          })),
+                ),
               ],
             );
           }),
@@ -270,9 +258,10 @@ class _UserPageState extends State<UserPage> {
   }
 }
 
-Route _createRoute() {
+Route _createRoute(user) {
   return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => UserDetail(),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          UserDetail(user: user),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(1.0, 0.0);
         var end = Offset.zero;

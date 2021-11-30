@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/User/models/user.dart';
 import 'package:yorizori_app/User/profile.dart';
 import 'package:yorizori_app/User/user_setting/menu.dart';
+import 'package:yorizori_app/User/user_setting/profileChange.dart';
 
 class UserDetail extends StatelessWidget {
-  const UserDetail({Key? key}) : super(key: key);
+  final User user;
+  const UserDetail({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +38,15 @@ class UserDetail extends StatelessWidget {
                     height: height * 0.15,
                     child: Stack(
                       children: [
-                        //profileRow(context,),
+                        profileRow(context, user),
+
+                        //프로필 수정하기
                         Positioned(
                           height: height * 0.043,
                           child: FloatingActionButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showProfileChange(context, user);
+                            },
                             shape: CircleBorder(
                                 side: BorderSide(
                                     width: 2,
@@ -75,7 +82,13 @@ class UserDetail extends StatelessWidget {
                     changePasswd(context, width, height),
                     */
                     Divider(),
-                    deleteAccount(context, width, height)
+                    ListTile(
+                      leading: Icon(Icons.arrow_back),
+                      title: Text("로그아웃"),
+                      onTap: () => {}, //TODO 로그아웃!!!
+                    ),
+                    Divider(),
+                    deleteAccount(context, width, height),
                   ],
                 ),
               )

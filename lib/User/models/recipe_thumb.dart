@@ -35,7 +35,7 @@ Future<List<RecipeThumb>> getRecipeThumbList(
     final response;
 
     if (user_id != null) {
-      url += user_id.toString();
+      url += user_id.toString() + "/";
       response = await http.get(Uri.parse(url));
     } else if (flag != null && recipe_list != null) {
       response = await http.post(Uri.parse(url),
