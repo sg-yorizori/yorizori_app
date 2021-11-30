@@ -7,6 +7,8 @@ import './models/TokenReceiver.dart';
 
 // import 'package:yorizori_app/User/models/user.dart';
 import './models/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -43,12 +45,16 @@ class _MyLoginState extends State<MyLogin> {
         print("login true!!");
 
         TokenReceiver myToken = TokenReceiver.fromJson(data);
-        print(myToken.token);
         int id = await idGet(myToken.token);
-        print(id);
         User myUser = await getUser(context, id);
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', myToken.token);
+        prefs.setInt('user_id', id);
+
         print("getUser:");
         print(myUser.user_id);
+
         Navigator.pushNamed(context, 'mainpage');
       }
     } else {
