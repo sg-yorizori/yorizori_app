@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './models/reg.dart';
 
 class MyRegister extends StatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
@@ -8,6 +9,10 @@ class MyRegister extends StatefulWidget {
 }
 
 class _MyRegisterState extends State<MyRegister> {
+  final _passwordController = TextEditingController();
+  final _passwordCheckController = TextEditingController();
+  final _idController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,9 +66,7 @@ class _MyRegisterState extends State<MyRegister> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 )),
-
-                            // ******
-                            // controller: emailController,
+                            controller: _idController,
                           ),
                           SizedBox(
                             height: 10,
@@ -81,8 +84,7 @@ class _MyRegisterState extends State<MyRegister> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            // ******
-                            // controller: passwordController,
+                            controller: _passwordController,
                           ),
                           SizedBox(
                             height: 10,
@@ -99,8 +101,7 @@ class _MyRegisterState extends State<MyRegister> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 )),
-                            // ******
-                            // controller: passwordController,
+                            controller: _passwordCheckController,
                           ),
                           SizedBox(
                             height: 10,
@@ -113,7 +114,13 @@ class _MyRegisterState extends State<MyRegister> {
                               primary: Color(0xfffa4a0c),
                             ),
                             onPressed: () {
-                              Navigator.pushNamed(context, 'register2');
+                              reg_id = _idController.text;
+
+                              if (_passwordController.text ==
+                                  _passwordCheckController.text) {
+                                reg_pass = _passwordController.text;
+                                Navigator.pushNamed(context, 'register2');
+                              }
                             },
                             child: Text(
                               '다음',
