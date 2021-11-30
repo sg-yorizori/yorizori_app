@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:yorizori_app/Home/addRecipe.dart';
 import 'dart:convert';
 import 'package:yorizori_app/Recipe/recipe.dart';
 import 'package:yorizori_app/Home/search.dart';
@@ -192,7 +193,13 @@ class _RecipeState extends State<Home> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) =>
+                        AddPage()));
+          },
           child: Icon(Icons.add, size: 30.0),
           backgroundColor: Colors.white,
           foregroundColor: Colors.deepOrangeAccent,

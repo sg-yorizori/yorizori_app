@@ -39,7 +39,7 @@ class _CameraState extends State<Camera> {
           await ImagePicker.platform.pickImage(source: ImageSource.camera);
       print(image);
       // setState(() {
-      if (image != null) image_cam = image!;
+      if (image != null) image_cam = image;
       // _flag = 1;
       // });
     }
