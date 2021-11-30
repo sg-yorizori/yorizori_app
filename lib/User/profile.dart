@@ -14,8 +14,8 @@ Widget profileRow(context, User user) {
             shape: BoxShape.circle,
             color: Colors.white,
             image: DecorationImage(
-              image: user.profile_img == null
-                  ? AssetImage('images/wink.png') as ImageProvider
+              image: user.profile_img == ''
+                  ? AssetImage('assets/images/wink.png') as ImageProvider
                   : NetworkImage(user.profile_img),
             ),
             boxShadow: [
