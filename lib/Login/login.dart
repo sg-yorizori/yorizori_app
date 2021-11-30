@@ -5,10 +5,12 @@ import './test.dart';
 import 'package:http/http.dart' as http;
 import './models/TokenReceiver.dart';
 
-// import 'package:yorizori_app/User/models/user.dart';
-import './models/User.dart';
+import 'package:yorizori_app/User/models/user.dart';
+// import './models/User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+
+import 'package:yorizori_app/sharedpref.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -42,18 +44,45 @@ class _MyLoginState extends State<MyLogin> {
         setState(() {
           _isLoading = false;
         });
-        print("login true!!");
+        // print("login true!!");
 
         TokenReceiver myToken = TokenReceiver.fromJson(data);
         int id = await idGet(myToken.token);
-        User myUser = await getUser(context, id);
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('token', myToken.token);
         prefs.setInt('user_id', id);
 
-        print("getUser:");
-        print(myUser.user_id);
+        // User myUser = await getUser(context, id);
+        // getUser(context, id);
+
+        var user;
+
+        final response =
+            await http.post(Uri.parse(UrlPrefix.urls + "users/profile/"),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: json.encode({"user_id": id}));
+        if (response.statusCode == 200) {
+          Map<String, dynamic> data =
+              jsonDecode(utf8.decode(response.bodyBytes));
+          user = User.fromJson(data);
+        } else {
+          throw Exception('failed get User ' + id.toString());
+        }
+
+        saveSharedPrefList(user.bookmark, 'bookmark');
+        saveSharedPrefList(user.disliked, 'disliked');
+
+        print("LogIn Success");
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        print(sharedPreferences.getString("token"));
+        print(sharedPreferences.getInt("user_id"));
+        print(sharedPreferences.getStringList("bookmark"));
+        print("!!!!");
+        print(sharedPreferences.getStringList("disliked"));
 
         Navigator.pushNamed(context, 'mainpage');
       }

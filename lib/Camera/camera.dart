@@ -15,6 +15,7 @@ import './bottom.dart';
 
 import 'package:yorizori_app/urls.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart' show rootBundle;
 
 PickedFile? image_cam;
 List<IngreList> ingre_list = [];
@@ -43,44 +44,53 @@ class _CameraState extends State<Camera> {
   Future _getImageFromCam() async {
     if (image_cam == null && _flag == 0) {
       var image =
-          await ImagePicker.platform.pickImage(source: ImageSource.camera);
+          //     await ImagePicker.platform.pickImage(source: ImageSource.camera);
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+
       print(image);
       print('!!!!');
-      // setState(() {
-      if (image != null) image_cam = image;
-      // _flag = 1;
-      // });
 
-      // List<int> imageBytes = await image.readAsBytes();
-      final bytes = await Io.File(image_cam!.path).readAsBytes();
-      String img64 = base64Encode(bytes);
-      print(img64.substring(0, 100));
+      if (image != null) {
+        image_cam = image;
 
-      final response = await http.post(
-        Uri.parse(UrlPrefix.urls + "recipe/detect/"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode({"image": img64}),
-      );
+        // important!!
+        final bytes = await Io.File(image_cam!.path).readAsBytes();
+        // final bytes = await Io.File().readAsBytes();
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data != null && mounted) {
-          print("camera success");
+        // final bytes = await rootBundle.loadString('assets/images/food.png');
+        // final bytes = await Io.File(snapshot.path).readAsBytes();
 
-          String rlt_img = data['result'];
+        // ByteData bytes = await rootBundle.load('assets/images/food.png');
 
-          decodedBytes = base64Decode(rlt_img);
-          print(data['ingrd']);
+        String img64 = base64Encode(bytes);
+        print(img64.substring(0, 100));
 
-          // Image.memory(decodedBytes);
-          // test_file = Io.File("test.png");
-          // test_file.writeAsBytesSync(decodedBytes);
+        final response = await http.post(
+          Uri.parse(UrlPrefix.urls + "recipe/detect/"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode({"image": img64}),
+        );
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          if (data != null && mounted) {
+            print("camera success");
+
+            String rlt_img = data['result'];
+
+            decodedBytes = base64Decode(rlt_img);
+            print(data['ingrd']);
+
+            // Image.memory(decodedBytes);
+            // test_file = Io.File("test.png");
+            // test_file.writeAsBytesSync(decodedBytes);
+          }
+        } else {
+          print("camera fail");
+          print(response.body);
         }
-      } else {
-        print("camera fail");
-        print(response.body);
       }
     }
 
