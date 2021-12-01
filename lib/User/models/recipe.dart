@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:yorizori_app/User/models/step.dart';
+import 'package:yorizori_app/User/models/step_unit.dart';
 import 'package:yorizori_app/urls.dart';
 
 class Recipe {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yorizori_app/sharedpref.dart';
-import 'package:yorizori_app/User/models/recipe_thumb.dart';
+import 'package:yorizori_app/User/models/recipe.dart';
 import 'package:yorizori_app/User/profile.dart';
 import 'package:yorizori_app/User/user_setting/setting_main.dart';
 
