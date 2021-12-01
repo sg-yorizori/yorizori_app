@@ -129,10 +129,9 @@ class _UserPageState extends State<UserPage> {
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                    "http://10.0.2.2:8000/media/profile/4.jpg")
-                                                // "https://cdn.ppomppu.co.kr/zboard/data3/2018/0509/m_1525850138_3126_1516635001428.jpg"),
-                                                ),
+                                              backgroundImage: NetworkImage(
+                                                  "https://cdn.ppomppu.co.kr/zboard/data3/2018/0509/m_1525850138_3126_1516635001428.jpg"),
+                                            ),
                                             Text(items[index])
                                           ],
                                         ));
