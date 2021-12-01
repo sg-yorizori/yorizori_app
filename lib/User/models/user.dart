@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:yorizori_app/User/models/recipe_thumb.dart';
 import 'package:yorizori_app/urls.dart';
+import 'package:yorizori_app/sharedpref.dart';
 
 class User {
   int user_id;
@@ -47,6 +48,9 @@ Future<List<dynamic>> getUser(context, userId) async {
     throw Exception(
         'failed get User ' + userId.toString()); //TODO exception handling...
   }
+
+  // saveSharedPrefList(user.bookmark,'bookmark');
+  // saveSharedPrefList(user.disliked,'disliked');
 
   return [user, bookmark_list, upload_list];
 }
