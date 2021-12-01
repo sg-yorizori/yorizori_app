@@ -136,7 +136,11 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
               Container(
                 child: Text(
                   '이런 재료는 유의해주세요',
-                  style: TextStyle(color: Color(0xfffa4a0c), fontSize: 18),
+                  style: TextStyle(
+                      color: Color(0xfffa4a0c),
+                      fontSize: 20,
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ]),
@@ -204,9 +208,10 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                   child: Text(
                     '추가',
                     style: TextStyle(
-                      color: Color(0xffffffff),
-                      fontSize: 18,
-                    ),
+                        color: Color(0xffffffff),
+                        fontSize: 19,
+                        fontFamily: 'Pretendard',
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
                 SizedBox(
@@ -251,7 +256,11 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
               Container(
                 child: Text(
                   '비건',
-                  style: TextStyle(color: Color(0xfffa4a0c), fontSize: 18),
+                  style: TextStyle(
+                      color: Color(0xfffa4a0c),
+                      fontSize: 20,
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ]),
@@ -278,7 +287,11 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                 margin: EdgeInsets.only(right: 16, left: 20),
                 child: Text(
                   '어떤 음식까지 허용하시나요?',
-                  style: TextStyle(color: Color(0xfffa4a0c), fontSize: 15),
+                  style: TextStyle(
+                      color: Color(0xfffa4a0c),
+                      fontSize: 17,
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ]),
@@ -455,11 +468,12 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                 userRegister();
               },
               child: Text(
-                '끝',
+                '끝!',
                 style: TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 18,
-                ),
+                    color: Color(0xffffffff),
+                    fontSize: 20,
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.w600),
               ),
             ),
           ],

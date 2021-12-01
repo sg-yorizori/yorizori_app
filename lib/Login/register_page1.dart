@@ -38,7 +38,11 @@ class _MyRegisterState extends State<MyRegister> {
             Container(
               child: Text(
                 '요리조리와 함께하기',
-                style: TextStyle(color: Color(0xfffa4a0c), fontSize: 15),
+                style: TextStyle(
+                    color: Color(0xfffa4a0c),
+                    fontSize: 20,
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(
@@ -125,9 +129,10 @@ class _MyRegisterState extends State<MyRegister> {
                             child: Text(
                               '다음',
                               style: TextStyle(
-                                color: Color(0xffffffff),
-                                fontSize: 18,
-                              ),
+                                  color: Color(0xffffffff),
+                                  fontSize: 20,
+                                  fontFamily: 'Pretendard',
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
                         ],
