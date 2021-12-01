@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
-
+import 'package:yorizori_app/urls.dart';
+import 'dart:convert';
 import './test.dart';
+import 'package:http/http.dart' as http;
+import './models/TokenReceiver.dart';
+
+import 'package:yorizori_app/User/models/user.dart';
+// import './models/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+
+import 'package:yorizori_app/sharedpref.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -12,6 +22,95 @@ class MyLogin extends StatefulWidget {
 class _MyLoginState extends State<MyLogin> {
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
+
+  var _id;
+  var _pass;
+  var _isLoading;
+
+  userLogin() async {
+    final response = await http.post(
+      Uri.parse(UrlPrefix.urls + "users/login/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "username": _id,
+        "password": _pass,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data != null && mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        // print("login true!!");
+
+        TokenReceiver myToken = TokenReceiver.fromJson(data);
+        int id = await idGet(myToken.token);
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', myToken.token);
+        prefs.setInt('user_id', id);
+
+        // User myUser = await getUser(context, id);
+        // getUser(context, id);
+
+        var user;
+
+        final response =
+            await http.post(Uri.parse(UrlPrefix.urls + "users/profile/"),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: json.encode({"user_id": id}));
+        if (response.statusCode == 200) {
+          Map<String, dynamic> data =
+              jsonDecode(utf8.decode(response.bodyBytes));
+          user = User.fromJson(data);
+        } else {
+          throw Exception('failed get User ' + id.toString());
+        }
+
+        saveSharedPrefList(user.bookmark, 'bookmark');
+        saveSharedPrefList(user.disliked, 'disliked');
+
+        print("LogIn Success");
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+
+        print(sharedPreferences.getString("token"));
+        print(sharedPreferences.getInt("user_id"));
+        print(sharedPreferences.getStringList("bookmark"));
+        print("!!!!");
+        print(sharedPreferences.getStringList("disliked"));
+
+        Navigator.pushNamed(context, 'mainpage');
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      print("login false");
+      print(response.body);
+    }
+  }
+
+  Future<int> idGet(String token) async {
+    String knoxToken = 'Token ' + token;
+    final response = await http.get(
+      Uri.parse(UrlPrefix.urls + "users/user/"),
+      headers: <String, String>{
+        'Authorization': knoxToken,
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['id'];
+    } else {
+      throw Exception();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +144,11 @@ class _MyLoginState extends State<MyLogin> {
               //     top: MediaQuery.of(context).size.height * 0.5),
               child: Text(
                 '요리조리 레시피를 찾아볼까요',
-                style: TextStyle(color: Colors.white, fontSize: 15),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(
@@ -73,7 +176,6 @@ class _MyLoginState extends State<MyLogin> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 )),
-
                             // ******
                             controller: emailController,
                           ),
@@ -106,15 +208,23 @@ class _MyLoginState extends State<MyLogin> {
                               primary: Color(0xffa52d2d),
                             ),
                             onPressed: () {
-                              Navigator.pushNamed(context, 'mainpage');
+                              // Navigator.pushNamed(context, 'mainpage');
+
+                              _id = emailController.text;
+                              _pass = passwordController.text;
+
+                              // print(_id);
+                              // print(_pass);
+                              userLogin();
                             },
                             child: Text(
                               '시작하기',
                               style: TextStyle(
-                                // decoration: TextDecoration.underline,
-                                color: Color(0xffffffff),
-                                fontSize: 18,
-                              ),
+                                  // decoration: TextDecoration.underline,
+                                  color: Color(0xffffffff),
+                                  fontSize: 19,
+                                  fontFamily: 'Pretendard',
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
                           Row(
@@ -130,7 +240,9 @@ class _MyLoginState extends State<MyLogin> {
                                   style: TextStyle(
                                       // decoration: TextDecoration.underline,
                                       color: Color(0xffffffff),
-                                      fontSize: 15),
+                                      fontSize: 17,
+                                      fontFamily: 'Pretendard',
+                                      fontWeight: FontWeight.w600),
                                 ),
                                 style: ButtonStyle(),
                               ),

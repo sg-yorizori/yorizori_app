@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import './register_page1.dart';
 
-class DislikeList {
-  final String name;
+import 'package:yorizori_app/urls.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-  DislikeList(this.name);
-}
+import './models/reg.dart';
+import './models/TokenReceiver.dart';
 
 class MyRegister_2 extends StatefulWidget {
   const MyRegister_2({Key? key}) : super(key: key);
@@ -18,6 +20,82 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
   final _dislikeController = TextEditingController();
   var i = 0;
   double d = 0;
+
+  int vegan = 0;
+
+  userRegister() async {
+    final response = await http.post(
+      Uri.parse(UrlPrefix.urls + "users/register/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "username": reg_id,
+        "password": reg_pass,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data != null && mounted) {
+        print("register success");
+
+        TokenReceiver myToken = TokenReceiver.fromJson(data);
+        int id = await idGet(myToken.token);
+        print(id);
+        prof_user_id = id;
+        // ****
+        // userProfile();
+      }
+    } else {
+      print("register fail");
+      print(response.body);
+    }
+  }
+
+  userProfile() async {
+    print("!@!!");
+    print(prof_user_id);
+    print(dislike_list);
+    print(vegan);
+    final response = await http.post(
+      Uri.parse(UrlPrefix.urls + "users/profile/create"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "nick_name": "테스트용",
+        "user_id": prof_user_id,
+        "disliked": dislike_list,
+        "vegan": vegan
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data != null && mounted) {
+        print("profile success");
+        Navigator.pushNamed(context, 'mainpage');
+      }
+    } else {
+      print("profile fail");
+      print(response.body);
+    }
+  }
+
+  Future<int> idGet(String token) async {
+    String knoxToken = 'Token ' + token;
+    final response = await http.get(
+      Uri.parse(UrlPrefix.urls + "users/user/"),
+      headers: <String, String>{
+        'Authorization': knoxToken,
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['id'];
+    } else {
+      throw Exception();
+    }
+  }
 
   Future<List<String>> _getinput() async {
     return dislike_list;
@@ -58,7 +136,11 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
               Container(
                 child: Text(
                   '이런 재료는 유의해주세요',
-                  style: TextStyle(color: Color(0xfffa4a0c), fontSize: 18),
+                  style: TextStyle(
+                      color: Color(0xfffa4a0c),
+                      fontSize: 20,
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ]),
@@ -126,9 +208,10 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                   child: Text(
                     '추가',
                     style: TextStyle(
-                      color: Color(0xffffffff),
-                      fontSize: 18,
-                    ),
+                        color: Color(0xffffffff),
+                        fontSize: 19,
+                        fontFamily: 'Pretendard',
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
                 SizedBox(
@@ -173,7 +256,11 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
               Container(
                 child: Text(
                   '비건',
-                  style: TextStyle(color: Color(0xfffa4a0c), fontSize: 18),
+                  style: TextStyle(
+                      color: Color(0xfffa4a0c),
+                      fontSize: 20,
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ]),
@@ -200,7 +287,11 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                 margin: EdgeInsets.only(right: 16, left: 20),
                 child: Text(
                   '어떤 음식까지 허용하시나요?',
-                  style: TextStyle(color: Color(0xfffa4a0c), fontSize: 15),
+                  style: TextStyle(
+                      color: Color(0xfffa4a0c),
+                      fontSize: 17,
+                      fontFamily: 'Pretendard',
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ]),
@@ -238,6 +329,7 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                       child: Image.asset('assets/images/icon1.png'),
                       onTap: () {
                         setState(() {
+                          vegan = 1;
                           i = 1;
                           d = 50 * i + 7.5;
                         });
@@ -256,6 +348,7 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                       child: Image.asset('assets/images/icon2.png'),
                       onTap: () {
                         setState(() {
+                          vegan = 2;
                           i = 2;
                           d = 50 * i + 7.5;
                         });
@@ -274,6 +367,7 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                       child: Image.asset('assets/images/icon3.png'),
                       onTap: () {
                         setState(() {
+                          vegan = 3;
                           i = 3;
                           d = 50 * i + 7.5;
                         });
@@ -292,6 +386,7 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                       child: Image.asset('assets/images/icon4.png'),
                       onTap: () {
                         setState(() {
+                          vegan = 4;
                           i = 4;
                           d = 50 * i + 7.5;
                         });
@@ -310,6 +405,7 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                       child: Image.asset('assets/images/icon5.png'),
                       onTap: () {
                         setState(() {
+                          vegan = 5;
                           i = 5;
                           d = 50 * i + 7.5;
                         });
@@ -328,6 +424,7 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                       child: Image.asset('assets/images/icon6.png'),
                       onTap: () {
                         setState(() {
+                          vegan = 6;
                           i = 6;
                           d = 50 * i + 7.5;
                         });
@@ -346,6 +443,7 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                       child: Image.asset('assets/images/icon7.png'),
                       onTap: () {
                         setState(() {
+                          vegan = 7;
                           i = 7;
                           d = 50 * i + 20;
                         });
@@ -366,13 +464,16 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
                 minimumSize: Size(380, 40),
                 primary: Color(0xfffa4a0c),
               ),
-              onPressed: () {},
+              onPressed: () {
+                userRegister();
+              },
               child: Text(
-                '끝',
+                '끝!',
                 style: TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 18,
-                ),
+                    color: Color(0xffffffff),
+                    fontSize: 20,
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.w600),
               ),
             ),
           ],
