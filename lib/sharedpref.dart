@@ -1,5 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+Future<int> getSharedPrefUser() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int user_id = prefs.getInt("user_id") ?? 0;
+  return user_id;
+}
+
 void saveSharedPrefList(List<int> intList, String target) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> strList = intList.map((i) => i.toString()).toList();

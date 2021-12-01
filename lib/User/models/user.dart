@@ -43,13 +43,13 @@ Future<List<dynamic>> getUser(context, userId) async {
       bookmark_list = await getRecipeList(flag: 1, recipe_list: user.bookmark);
 
     upload_list = await getRecipeList(user_id: userId);
+
+    saveSharedPrefList(user.bookmark, 'bookmark');
+    saveSharedPrefList(user.disliked, 'disliked');
   } else {
     throw Exception(
         'failed get User ' + userId.toString()); //TODO exception handling...
   }
-
-  // saveSharedPrefList(user.bookmark,'bookmark');
-  // saveSharedPrefList(user.disliked,'disliked');
 
   return [user, bookmark_list, upload_list];
 }
