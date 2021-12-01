@@ -39,6 +39,7 @@ void showProfileChange(context, User user) {
                         radius: width * 0.08,
                         backgroundImage: (user.profile_img != '')
                             ? NetworkImage(user.profile_img)
+                            //Image.network(user.profile_img) as ImageProvider
                             : AssetImage('assets/images/wink.png')
                                 as ImageProvider,
                       ),
