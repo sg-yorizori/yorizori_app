@@ -144,7 +144,11 @@ class _MyLoginState extends State<MyLogin> {
               //     top: MediaQuery.of(context).size.height * 0.5),
               child: Text(
                 '요리조리 레시피를 찾아볼까요',
-                style: TextStyle(color: Colors.white, fontSize: 15),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(
@@ -216,10 +220,11 @@ class _MyLoginState extends State<MyLogin> {
                             child: Text(
                               '시작하기',
                               style: TextStyle(
-                                // decoration: TextDecoration.underline,
-                                color: Color(0xffffffff),
-                                fontSize: 18,
-                              ),
+                                  // decoration: TextDecoration.underline,
+                                  color: Color(0xffffffff),
+                                  fontSize: 19,
+                                  fontFamily: 'Pretendard',
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
                           Row(
@@ -235,7 +240,9 @@ class _MyLoginState extends State<MyLogin> {
                                   style: TextStyle(
                                       // decoration: TextDecoration.underline,
                                       color: Color(0xffffffff),
-                                      fontSize: 15),
+                                      fontSize: 17,
+                                      fontFamily: 'Pretendard',
+                                      fontWeight: FontWeight.w600),
                                 ),
                                 style: ButtonStyle(),
                               ),
