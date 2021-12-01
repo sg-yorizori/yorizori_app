@@ -15,11 +15,11 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   var user;
-  List<List<RecipeThumb>> sub_recipe_list = [[], []];
-  List<RecipeThumb> user_bookmark_list = [];
-  List<RecipeThumb> user_upload_list = [];
+  List<List<Recipe>> sub_recipe_list = [[], []];
+  List<Recipe> user_bookmark_list = [];
+  List<Recipe> user_upload_list = [];
 
-  List<RecipeThumb> recent_view_list = [];
+  List<Recipe> recent_view_list = [];
 
   @override
   void initState() {

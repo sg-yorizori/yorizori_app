@@ -1,19 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:yorizori_app/User/models/step.dart';
 import 'package:yorizori_app/urls.dart';
 
-class RecipeThumb {
+class Recipe {
   int id;
   String title;
   DateTime created_date;
   int views;
   String thumb;
   int writer;
+  List<Unit> units = [];
+  List<Step> steps = [];
 
-  RecipeThumb(this.id, this.title, this.created_date, this.views, this.thumb,
-      this.writer);
+  Recipe(this.id, this.title, this.created_date, this.views, this.thumb,
+      this.writer, this.units, this.steps);
 
-  RecipeThumb.fromJson(Map<String, dynamic> json)
+  Recipe.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         title = json['title'],
         created_date = DateTime.parse(json['created_date']),
@@ -22,14 +25,20 @@ class RecipeThumb {
         writer = json['writer'];
 }
 
-List<RecipeThumb> parseRecipeThumbList(String responseBody) {
+Future<List<Recipe>> parseRecipeList(String responseBody) async {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  return parsed.map<RecipeThumb>((json) => RecipeThumb.fromJson(json)).toList();
+  List<Recipe> recipeList =
+      parsed.map<Recipe>((json) => Recipe.fromJson(json)).toList();
+  for (var i = 0; i < recipeList.length; i++) {
+    int recipe_id = recipeList[i].id;
+    recipeList[i].units = await getUnitList(recipe_id);
+    recipeList[i].steps = await getStepList(recipe_id);
+  }
+  return recipeList;
 }
 
-Future<List<RecipeThumb>> getRecipeThumbList(
-    {user_id, flag, recipe_list}) async {
-  List<RecipeThumb> recipeThumbList = [];
+Future<List<Recipe>> getRecipeList({user_id, flag, recipe_list}) async {
+  List<Recipe> recipeList = [];
   try {
     var url = UrlPrefix.urls + 'recipe/list/';
     final response;
@@ -44,16 +53,16 @@ Future<List<RecipeThumb>> getRecipeThumbList(
           },
           body: json.encode({"flag": flag, "recipe_list": recipe_list}));
     } else {
-      throw Exception('getRecipeThumbList parameter error');
+      throw Exception('getRecipeList parameter error');
     }
 
     if (response.statusCode == 200) {
-      recipeThumbList = parseRecipeThumbList(utf8.decode(response.bodyBytes));
+      recipeList = await parseRecipeList(utf8.decode(response.bodyBytes));
     } else {
       throw Exception('falied get recipe list with ' + flag.toString());
     }
   } catch (e) {
     print(e);
   }
-  return recipeThumbList;
+  return recipeList;
 }
