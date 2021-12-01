@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:io' as Io;
 import 'package:image_picker/image_picker.dart';
+import 'package:yorizori_app/Camera/result_page.dart';
 
 //import 'package:yorizori_app/Recipe/recipe.dart';
 import 'package:yorizori_app/Home/home.dart';
@@ -15,10 +16,9 @@ import './addtile.dart';
 import 'package:yorizori_app/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
+import './ingre_name_list.dart';
 
 PickedFile? image_cam;
-
-List<String> ingre_name_list = [];
 
 var decodedBytes;
 
@@ -42,8 +42,8 @@ class _CameraState extends State<Camera> {
   Future _getImageFromCam() async {
     if (image_cam == null && _flag == 0) {
       var image =
-          //     await ImagePicker.platform.pickImage(source: ImageSource.camera);
-          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+          await ImagePicker.platform.pickImage(source: ImageSource.camera);
+      // await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
         image_cam = image;
@@ -71,10 +71,6 @@ class _CameraState extends State<Camera> {
             String rlt_img = data['result'];
 
             decodedBytes = base64Decode(rlt_img);
-            // print(data['ingrd']);
-            // print(data['ingrd'].length);
-            // print(data['ingrd'][0]);
-            // print(data['ingrd'][1]);
 
             ingre_name_list = [];
             for (var i = 0; i < data['ingrd'].length; i++) {
@@ -200,6 +196,14 @@ class _CameraState extends State<Camera> {
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             print(ingre_name_list);
+            if (ingre_name_list.isEmpty == true) return;
+            setState(() {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ResultPage(_flag2_update)),
+              );
+            });
           },
           backgroundColor: Colors.deepOrangeAccent,
           icon: Icon(
