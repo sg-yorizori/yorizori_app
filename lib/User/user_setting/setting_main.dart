@@ -89,18 +89,11 @@ class UserDetail extends StatelessWidget {
                       leading: Icon(Icons.arrow_back),
                       title: Text("로그아웃"),
                       onTap: () {
-                        //logout();
-
-                        // Navigator.of(context)
-                        //     .popUntil((route) => route.isFirst);
-
+                        logout();
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => YorizoriAppAfterLogout(),
                             settings: RouteSettings(name: "/")));
-
-                        // Navigator.popUntil(
-                        //     context, ModalRoute.withName('login'));
-                      }, //TODO 로그아웃!!!
+                      },
                     ),
                     Divider(),
                     deleteAccount(context, width, height),

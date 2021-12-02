@@ -60,11 +60,12 @@ void logout() async {
     final response = await http.post(
       Uri.parse(UrlPrefix.urls + 'users/logout/'),
       headers: <String, String>{
-        'Authorization': token,
+        'Authorization': "Token " + token,
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 204) {
+      print("logout sucecced");
     } else {
       throw Exception('falied logout');
     }
