@@ -29,11 +29,11 @@ Future<List<Recipe>> parseRecipeList(String responseBody) async {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
   List<Recipe> recipeList =
       parsed.map<Recipe>((json) => Recipe.fromJson(json)).toList();
-  for (var i = 0; i < recipeList.length; i++) {
-    int recipe_id = recipeList[i].id;
-    recipeList[i].units = await getUnitList(recipe_id);
-    recipeList[i].steps = await getStepList(recipe_id);
-  }
+  // for (var i = 0; i < recipeList.length; i++) {
+  //   int recipe_id = recipeList[i].id;
+  //   recipeList[i].units = await getUnitList(recipe_id);
+  //   recipeList[i].steps = await getStepList(recipe_id);
+  // }
   return recipeList;
 }
 
@@ -65,4 +65,18 @@ Future<List<Recipe>> getRecipeList({user_id, flag, recipe_list}) async {
     print(e);
   }
   return recipeList;
+}
+
+Future<Recipe> getRecipe(int recipe_id) async {
+  var recipe;
+  final response = await http
+      .get(Uri.parse(UrlPrefix.urls + "recipe/" + recipe_id.toString()));
+  if (response.statusCode == 200) {
+    Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+    recipe = Recipe.fromJson(data);
+  } else {
+    throw Exception(
+        'failed get User ' + recipe_id.toString()); //TODO exception handling...
+  }
+  return recipe;
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/User/list_view_UI.dart';
+import 'package:yorizori_app/User/recent_view.dart';
 import 'package:yorizori_app/sharedpref.dart';
 import 'package:yorizori_app/User/models/recipe.dart';
 import 'package:yorizori_app/User/profile.dart';
@@ -44,7 +46,6 @@ class _UserPageState extends State<UserPage> {
     List<int> saved_recent_view = await getSharedPrefList("recent_view");
     recent_view_list =
         await getRecipeList(flag: 1, recipe_list: saved_recent_view);
-    //UserId  prefs
   }
 
   @override
@@ -72,7 +73,7 @@ class _UserPageState extends State<UserPage> {
           future: getSharedPrefUser(),
           builder: (context, snapshot) {
             if (snapshot.hasData == false) {
-              return Center(child: CircularProgressIndicator());
+              return Container(); //Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(
                 child: Text('Error: ${snapshot.error}'),
@@ -83,7 +84,7 @@ class _UserPageState extends State<UserPage> {
                 future: getUser(context, user_id),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData == false) {
-                    return Center(child: CircularProgressIndicator());
+                    return Container(); //Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(
                       child: Text('Error: ${snapshot.error}'),
@@ -96,7 +97,6 @@ class _UserPageState extends State<UserPage> {
 
                   user_upload_list = data[2];
                   sub_recipe_list = [user_bookmark_list, user_upload_list];
-                  print(user.profile_img);
 
                   return Column(
                     children: [
@@ -126,63 +126,7 @@ class _UserPageState extends State<UserPage> {
                                   ],
                                 ),
                               ),
-                              ScrollConfiguration(
-                                behavior: NoGlow(),
-                                child: Container(
-                                    margin:
-                                        EdgeInsets.only(bottom: height * 0.03),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: width * 0.05),
-                                    height: 90,
-                                    //color: Colors.grey,
-                                    child: ListView.builder(
-                                        physics: const BouncingScrollPhysics(
-                                            parent:
-                                                AlwaysScrollableScrollPhysics()),
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: recent_view_list.length,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 5),
-                                              width: 90,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  CircleAvatar(
-                                                    backgroundImage: recent_view_list[
-                                                                    index]
-                                                                .thumb !=
-                                                            ''
-                                                        // ? Image.network(
-                                                        //         recent_view_list[
-                                                        //                 index]
-                                                        //             .thumb)
-                                                        //     as ImageProvider
-                                                        ? NetworkImage(
-                                                            recent_view_list[
-                                                                    index]
-                                                                .thumb)
-                                                        : AssetImage(
-                                                                'assets/images/wink.png')
-                                                            as ImageProvider,
-                                                  ),
-                                                  Text(
-                                                      recent_view_list[index]
-                                                          .title,
-                                                      overflow:
-                                                          TextOverflow.ellipsis)
-                                                ],
-                                              ));
-                                        })),
-                              )
+                              recentViewWidget(width, height, recent_view_list)
                             ],
                           ),
                         ),
@@ -342,12 +286,4 @@ Route _createRoute(user) {
           child: child,
         );
       });
-}
-
-class NoGlow extends ScrollBehavior {
-  @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    return child;
-  }
 }
