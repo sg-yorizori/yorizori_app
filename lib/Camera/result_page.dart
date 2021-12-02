@@ -83,8 +83,6 @@ class _ResultPageState extends State<ResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // resizeToAvoidBottomInset: false,
-        // backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.deepOrangeAccent,
           elevation: 0,
@@ -98,7 +96,7 @@ class _ResultPageState extends State<ResultPage> {
           ),
         ),
         body: Container(
-          margin: EdgeInsets.only(right: 16, left: 20),
+          margin: EdgeInsets.only(right: 5, left: 5),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
@@ -181,7 +179,11 @@ class _ResultPageState extends State<ResultPage> {
   Widget buildIngre(String ingre_one, int index) {
     return TextButton(
       style: TextButton.styleFrom(
-          textStyle: const TextStyle(fontSize: 20),
+          textStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontFamily: 'Pretendard',
+              fontWeight: FontWeight.w600),
           backgroundColor: Colors.white,
           primary: Colors.deepOrangeAccent,
           shape:

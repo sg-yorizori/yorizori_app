@@ -7,6 +7,10 @@ import 'package:http/http.dart' as http;
 
 import './models/reg.dart';
 import './models/TokenReceiver.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yorizori_app/sharedpref.dart';
+
+import 'package:yorizori_app/User/models/user.dart';
 
 class MyRegister_2 extends StatefulWidget {
   const MyRegister_2({Key? key}) : super(key: key);
@@ -24,6 +28,8 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
   int vegan = 0;
 
   userRegister() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     final response = await http.post(
       Uri.parse(UrlPrefix.urls + "users/register/"),
       headers: <String, String>{
@@ -40,7 +46,11 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
         print("register success");
 
         TokenReceiver myToken = TokenReceiver.fromJson(data);
+        prefs.setString('token', myToken.token);
+
         int id = await idGet(myToken.token);
+        prefs.setInt('user_id', id);
+
         print(id);
         prof_user_id = id;
         // ****
@@ -73,12 +83,51 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
       final data = json.decode(response.body);
       if (data != null && mounted) {
         print("profile success");
-        Navigator.pushNamed(context, 'mainpage');
+        await _userLogin();
       }
     } else {
       print("profile fail");
       print(response.body);
     }
+  }
+
+  _userLogin() async {
+    SharedPreferences tem = await SharedPreferences.getInstance();
+
+    var user;
+
+    final response =
+        await http.post(Uri.parse(UrlPrefix.urls + "users/profile/"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: json.encode({"user_id": tem.getInt("user_id")}));
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      user = User.fromJson(data);
+    } else {
+      throw Exception('failed get User ' + tem.getInt("user_id").toString());
+    }
+
+    print("@@@@@@@@@");
+    print(user.bookmark);
+    print(user.disliked);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    saveSharedPrefList(user.bookmark, 'bookmark');
+    saveSharedPrefList(user.disliked, 'disliked');
+    prefs.setString('nick_name', user.nick_name);
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    print(sharedPreferences.getString("token"));
+    print(sharedPreferences.getInt("user_id"));
+    print(sharedPreferences.getString("nick_name"));
+    print(sharedPreferences.getStringList("bookmark"));
+    print("!!!!");
+    print(sharedPreferences.getStringList("disliked"));
+
+    Navigator.pushNamed(context, 'mainpage');
   }
 
   Future<int> idGet(String token) async {
