@@ -53,3 +53,22 @@ Future<List<dynamic>> getUser(context, userId) async {
 
   return [user, bookmark_list, upload_list];
 }
+
+void logout() async {
+  try {
+    String token = await getSharedPrefToken();
+    final response = await http.post(
+      Uri.parse(UrlPrefix.urls + 'users/logout/'),
+      headers: <String, String>{
+        'Authorization': token,
+      },
+    );
+
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('falied logout');
+    }
+  } catch (e) {
+    print(e);
+  }
+}

@@ -6,6 +6,12 @@ Future<int> getSharedPrefUser() async {
   return user_id;
 }
 
+Future<String> getSharedPrefToken() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String token = prefs.getString("token") ?? '';
+  return token;
+}
+
 void saveSharedPrefList(List<int> intList, String target) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> strList = intList.map((i) => i.toString()).toList();

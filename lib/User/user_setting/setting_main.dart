@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/Login/login.dart';
+import 'package:yorizori_app/Login/splash.dart';
 import 'package:yorizori_app/User/models/user.dart';
 import 'package:yorizori_app/User/profile.dart';
 import 'package:yorizori_app/User/user_setting/menu.dart';
 import 'package:yorizori_app/User/user_setting/profileChange.dart';
+import 'package:yorizori_app/main.dart';
 
 class UserDetail extends StatelessWidget {
   final User user;
@@ -85,7 +88,19 @@ class UserDetail extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.arrow_back),
                       title: Text("로그아웃"),
-                      onTap: () => {}, //TODO 로그아웃!!!
+                      onTap: () {
+                        //logout();
+
+                        // Navigator.of(context)
+                        //     .popUntil((route) => route.isFirst);
+
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => YorizoriAppAfterLogout(),
+                            settings: RouteSettings(name: "/")));
+
+                        // Navigator.popUntil(
+                        //     context, ModalRoute.withName('login'));
+                      }, //TODO 로그아웃!!!
                     ),
                     Divider(),
                     deleteAccount(context, width, height),
