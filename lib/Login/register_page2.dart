@@ -44,7 +44,7 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
         print(id);
         prof_user_id = id;
         // ****
-        // userProfile();
+        userProfile();
       }
     } else {
       print("register fail");

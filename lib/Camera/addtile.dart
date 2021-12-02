@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import './camera.dart';
+import './ingre_name_list.dart';
 
 // import './ingrelist.dart';
 
