@@ -246,21 +246,21 @@ class _ResultPageState extends State<ResultPage> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.deepOrangeAccent,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        "작성자",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 16,
                           color: Colors.white,
                         ),
                       ),
                     ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(bottom: 8),
+                    //   child: Text(
+                    //     "작성자",
+                    //     overflow: TextOverflow.ellipsis,
+                    //     style: TextStyle(
+                    //       fontSize: 16,
+                    //       color: Colors.white,
+                    //     ),
+                    //   ),
+                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

@@ -63,13 +63,13 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        "nick_name": "테스트용",
+        "nick_name": reg_nick_name,
         "user_id": prof_user_id,
         "disliked": dislike_list,
         "vegan": vegan
       }),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       final data = json.decode(response.body);
       if (data != null && mounted) {
         print("profile success");
