@@ -7,7 +7,7 @@ import 'dart:async';
 import 'dart:convert';
 import './models/step.dart';
 import './models/Recipe_one.dart';
-import './ingre_name_list.dart';
+// import './ingre_name_list.dart';
 import './models/unit.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -524,9 +524,6 @@ class _DetailState extends State<DetailPage2> {
 
   List<Widget> buildIngred(Recipe_One recipe) {
     List<Widget> list = [];
-
-    print("11111");
-    print(ingre_name_list.length);
 
     for (var i = 0; i < units.length; i++) {
       list.add(buildNutrition(units[i].unit, units[i].ingrd_name));
