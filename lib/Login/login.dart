@@ -74,6 +74,7 @@ class _MyLoginState extends State<MyLogin> {
 
         saveSharedPrefList(user.bookmark, 'bookmark');
         saveSharedPrefList(user.disliked, 'disliked');
+        prefs.setString('nick_name', user.nick_name);
 
         print("LogIn Success");
         SharedPreferences sharedPreferences =
@@ -81,6 +82,7 @@ class _MyLoginState extends State<MyLogin> {
 
         print(sharedPreferences.getString("token"));
         print(sharedPreferences.getInt("user_id"));
+        print(sharedPreferences.getString("nick_name"));
         print(sharedPreferences.getStringList("bookmark"));
         print("!!!!");
         print(sharedPreferences.getStringList("disliked"));

@@ -12,6 +12,7 @@ class _MyRegisterState extends State<MyRegister> {
   final _passwordController = TextEditingController();
   final _passwordCheckController = TextEditingController();
   final _idController = TextEditingController();
+  final _nicknameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +77,22 @@ class _MyRegisterState extends State<MyRegister> {
                             height: 10,
                           ),
                           TextField(
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding: const EdgeInsets.all(13),
+                                fillColor: Colors.white,
+                                filled: true,
+                                hintText: "닉네임",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                )),
+                            controller: _nicknameController,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextField(
                             style: TextStyle(),
                             obscureText: true,
                             decoration: InputDecoration(
@@ -119,6 +136,7 @@ class _MyRegisterState extends State<MyRegister> {
                             ),
                             onPressed: () {
                               reg_id = _idController.text;
+                              reg_nick_name = _nicknameController.text;
 
                               if (_passwordController.text ==
                                   _passwordCheckController.text) {
