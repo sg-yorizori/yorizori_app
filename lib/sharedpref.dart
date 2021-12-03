@@ -40,7 +40,8 @@ void addSharedPrefList(int addValue, String target) async {
   if (intList.length > 5) {
     intList.removeAt(0);
   }
-
+  print("recent_view");
+  print(intList);
   List<String> strList = intList.map((i) => i.toString()).toList();
   prefs.setStringList(target, strList);
 }

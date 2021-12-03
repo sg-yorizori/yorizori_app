@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/Camera/detail.dart';
+import 'package:yorizori_app/Camera/models/Recipe_one.dart';
 import 'package:yorizori_app/User/list_view_UI.dart';
 import 'package:yorizori_app/User/models/bookmark.dart';
 import 'package:yorizori_app/User/recent_view.dart';
 import 'package:yorizori_app/sharedpref.dart';
-import 'package:yorizori_app/User/models/recipe.dart';
+//import 'package:yorizori_app/User/models/recipe.dart';
 import 'package:yorizori_app/User/profile.dart';
 import 'package:yorizori_app/User/user_setting/setting_main.dart';
 
@@ -18,11 +20,11 @@ class UserPage extends StatefulWidget {
 
 class UserPageState extends State<UserPage> {
   var user;
-  List<List<Recipe>> sub_recipe_list = [[], []];
-  List<Recipe> user_bookmark_list = [];
-  List<Recipe> user_upload_list = [];
+  List<List<Recipe_One>> sub_recipe_list = [[], []];
+  List<Recipe_One> user_bookmark_list = [];
+  List<Recipe_One> user_upload_list = [];
 
-  List<Recipe> recent_view_list = [];
+  List<Recipe_One> recent_view_list = [];
   int? user_id;
 
   @override
@@ -45,8 +47,15 @@ class UserPageState extends State<UserPage> {
 
   _fetch() async {
     List<int> saved_recent_view = await getSharedPrefList("recent_view");
+    print("saved_recent_view");
+    print(saved_recent_view);
     recent_view_list =
         await getRecipeList(flag: 1, recipe_list: saved_recent_view);
+    recent_view_list = recent_view_list.reversed.toList();
+
+    for (int i = 0; i < recent_view_list.length; i++) {
+      print(recent_view_list[i].id);
+    }
   }
 
   User refreshData() {
@@ -238,6 +247,16 @@ class UserPageState extends State<UserPage> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: ListTile(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DetailPage2(
+                                                          sub_recipe_list[
+                                                                  menuSelected]
+                                                              [index])));
+                                        },
                                         title: Text(
                                             sub_recipe_list[menuSelected][index]
                                                 .title,

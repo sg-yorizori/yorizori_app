@@ -178,9 +178,7 @@ class _DetailState extends State<DetailPage2> {
 
   Future<List<Step_detail>> _getSteps() async {
     if (steps.length == 0) {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      addSharedPrefList(widget.recipe.id, "recent_view");
+      setRecentView(widget.recipe.id);
 
       steps = [];
       final response = await http.get(

@@ -23,44 +23,37 @@ class Recipe_One {
         writer = json['writer'];
 }
 
-// Future<List<Recipe>> parseRecipeList(String responseBody) async {
-//   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-//   List<Recipe> recipeList =
-//       parsed.map<Recipe>((json) => Recipe.fromJson(json)).toList();
-//   for (var i = 0; i < recipeList.length; i++) {
-//     int recipe_id = recipeList[i].id;
-//     recipeList[i].units = await getUnitList(recipe_id);
-//     recipeList[i].steps = await getStepList(recipe_id);
-//   }
-//   return recipeList;
-// }
+Future<List<Recipe_One>> parseRecipeList(String responseBody) async {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  return parsed.map<Recipe_One>((json) => Recipe_One.fromJson(json)).toList();
+}
 
-// Future<List<Recipe_One>> getRecipeList({user_id, flag, recipe_list}) async {
-//   List<Recipe_One> recipeList = [];
-//   try {
-//     var url = UrlPrefix.urls + 'recipe/list/';
-//     final response;
+Future<List<Recipe_One>> getRecipeList({user_id, flag, recipe_list}) async {
+  List<Recipe_One> recipeList = [];
+  try {
+    var url = UrlPrefix.urls + 'recipe/list/';
+    final response;
 
-//     if (user_id != null) {
-//       url += user_id.toString() + "/";
-//       response = await http.get(Uri.parse(url));
-//     } else if (flag != null && recipe_list != null) {
-//       response = await http.post(Uri.parse(url),
-//           headers: <String, String>{
-//             'Content-Type': 'application/json; charset=UTF-8',
-//           },
-//           body: json.encode({"flag": flag, "recipe_list": recipe_list}));
-//     } else {
-//       throw Exception('getRecipeList parameter error');
-//     }
+    if (user_id != null) {
+      url += user_id.toString() + "/";
+      response = await http.get(Uri.parse(url));
+    } else if (flag != null && recipe_list != null) {
+      response = await http.post(Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: json.encode({"flag": flag, "recipe_list": recipe_list}));
+    } else {
+      throw Exception('getRecipeList parameter error');
+    }
 
-//     if (response.statusCode == 200) {
-//       recipeList = await parseRecipeList(utf8.decode(response.bodyBytes));
-//     } else {
-//       throw Exception('falied get recipe list with ' + flag.toString());
-//     }
-//   } catch (e) {
-//     print(e);
-//   }
-//   return recipeList;
-// }
+    if (response.statusCode == 200) {
+      recipeList = await parseRecipeList(utf8.decode(response.bodyBytes));
+    } else {
+      throw Exception('falied get recipe list with ' + flag.toString());
+    }
+  } catch (e) {
+    print(e);
+  }
+  return recipeList;
+}

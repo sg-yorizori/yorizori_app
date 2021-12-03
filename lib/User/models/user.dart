@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:yorizori_app/Camera/models/Recipe_one.dart';
 import 'dart:io' as Io;
-import 'package:yorizori_app/User/models/recipe.dart';
+//import 'package:yorizori_app/User/models/recipe.dart';
 import 'package:yorizori_app/urls.dart';
 import 'package:yorizori_app/sharedpref.dart';
 
@@ -28,8 +29,8 @@ class User {
 
 Future<List<dynamic>> getUser(context, userId) async {
   var user;
-  List<Recipe> bookmark_list = [];
-  List<Recipe> upload_list = [];
+  List<Recipe_One> bookmark_list = [];
+  List<Recipe_One> upload_list = [];
 
   final response = await http.post(Uri.parse(UrlPrefix.urls + "users/profile/"),
       headers: <String, String>{
