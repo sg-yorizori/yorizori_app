@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yorizori_app/Camera/camera.dart';
 import 'package:yorizori_app/User/user_main.dart';
 //import 'package:yorizori_app/Recipe/recipe.dart';
@@ -31,6 +32,17 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetch();
+  }
+
+  _fetch() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('user_id', 3);
   }
 
   @override

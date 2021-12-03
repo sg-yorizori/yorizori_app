@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:io' as Io;
 import 'package:yorizori_app/User/models/recipe.dart';
 import 'package:yorizori_app/urls.dart';
 import 'package:yorizori_app/sharedpref.dart';
@@ -68,6 +69,37 @@ void logout() async {
       print("logout sucecced");
     } else {
       throw Exception('falied logout');
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+void profileUpadte(String new_nick_name, [new_profile_image]) async {
+  try {
+    int user_id = await getSharedPrefUser();
+    Map<String, dynamic> body = {
+      "user_id": user_id,
+      "nick_name": new_nick_name
+    };
+
+    if (new_profile_image != null) {
+      final bytes = await Io.File(new_profile_image!.path).readAsBytes();
+      String img64 = base64Encode(bytes);
+      body["profile_img"] = img64;
+    }
+
+    final response =
+        await http.post(Uri.parse(UrlPrefix.urls + 'users/profile/update'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: json.encode(body));
+
+    if (response.statusCode == 200) {
+      print("profile change sucecced");
+    } else {
+      throw Exception('falied profile change');
     }
   } catch (e) {
     print(e);

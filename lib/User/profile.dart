@@ -25,13 +25,16 @@ Widget profileRow(context, User user) {
                   offset: Offset(2, 4))
             ]),
       ),
-      Text(user.nick_name,
-          style: //Theme.of(context).textTheme.headline5,
-              TextStyle(
-                  fontFamily: 'Pretendard',
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white))
+      Container(
+        child: Text(user.nick_name,
+            style: //Theme.of(context).textTheme.headline5,
+                TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    overflow: TextOverflow.ellipsis,
+                    color: Colors.white)),
+      )
     ],
   );
   return profileRow;

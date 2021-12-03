@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yorizori_app/User/list_view_UI.dart';
+import 'package:yorizori_app/User/models/bookmark.dart';
 import 'package:yorizori_app/User/recent_view.dart';
 import 'package:yorizori_app/sharedpref.dart';
 import 'package:yorizori_app/User/models/recipe.dart';
@@ -12,10 +13,10 @@ class UserPage extends StatefulWidget {
   UserPage({Key? key}) : super(key: key);
 
   @override
-  _UserPageState createState() => _UserPageState();
+  UserPageState createState() => UserPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class UserPageState extends State<UserPage> {
   var user;
   List<List<Recipe>> sub_recipe_list = [[], []];
   List<Recipe> user_bookmark_list = [];
@@ -48,6 +49,10 @@ class _UserPageState extends State<UserPage> {
         await getRecipeList(flag: 1, recipe_list: saved_recent_view);
   }
 
+  refreshData() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -58,10 +63,13 @@ class _UserPageState extends State<UserPage> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.of(context).push(_createRoute(user));
+                Navigator.of(context)
+                    .push(_createRoute(user, refreshData))
+                    .then((val) => val ? refreshData() : null);
               },
               icon: Icon(Icons.grid_view_rounded))
         ],
@@ -111,6 +119,7 @@ class _UserPageState extends State<UserPage> {
                             children: [
                               SizedBox(
                                   height: height * 0.18,
+                                  width: width,
                                   child: profileRow(context, user)),
                               Container(
                                 height: height * 0.03,
@@ -120,8 +129,11 @@ class _UserPageState extends State<UserPage> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      '👀',
-                                      style: TextStyle(fontSize: width * 0.05),
+                                      '👀 최근 본 레시피',
+                                      style: TextStyle(
+                                          fontSize: width * 0.035,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
                                     )
                                   ],
                                 ),
@@ -197,9 +209,13 @@ class _UserPageState extends State<UserPage> {
                                         .title),
                                     onDismissed: (direction) {
                                       setState(() {
+                                        deletBookmarkOrMyRecipe(
+                                            menuSelected,
+                                            sub_recipe_list[menuSelected][index]
+                                                .id);
+
                                         sub_recipe_list[menuSelected]
                                             .removeAt(index);
-                                        //TODO 삭제 request
                                       });
                                     },
                                     child: Container(
@@ -269,10 +285,10 @@ class _UserPageState extends State<UserPage> {
   }
 }
 
-Route _createRoute(user) {
+Route _createRoute(user, refresh) {
   return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          UserDetail(user: user),
+          UserDetail(user: user, mainRefresh: refresh),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(1.0, 0.0);
         var end = Offset.zero;

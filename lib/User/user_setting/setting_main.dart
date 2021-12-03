@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:yorizori_app/Login/login.dart';
-import 'package:yorizori_app/Login/splash.dart';
 import 'package:yorizori_app/User/models/user.dart';
 import 'package:yorizori_app/User/profile.dart';
+import 'package:yorizori_app/User/user_main.dart';
 import 'package:yorizori_app/User/user_setting/menu.dart';
 import 'package:yorizori_app/User/user_setting/profileChange.dart';
 import 'package:yorizori_app/main.dart';
 
-class UserDetail extends StatelessWidget {
-  final User user;
-  const UserDetail({Key? key, required this.user}) : super(key: key);
+class UserDetail extends StatefulWidget {
+  Function mainRefresh;
+  User user;
+  UserDetail({Key? key, required this.user, required this.mainRefresh})
+      : super(key: key);
+
+  @override
+  State<UserDetail> createState() => _UserDetailState();
+}
+
+class _UserDetailState extends State<UserDetail> {
+  refreshData() async {
+    // var update = await getUser(context, widget.user.user_id);
+    // widget.user = update[0];
+    // widget.mainRefresh();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +35,7 @@ class UserDetail extends StatelessWidget {
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, true);
             },
           ),
           backgroundColor: Colors.transparent,
@@ -41,26 +54,13 @@ class UserDetail extends StatelessWidget {
                     height: height * 0.15,
                     child: Stack(
                       children: [
-                        profileRow(context, user),
+                        profileRow(context, widget.user),
 
                         //프로필 수정하기
                         Positioned(
                           height: height * 0.043,
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              showProfileChange(context, user);
-                            },
-                            shape: CircleBorder(
-                                side: BorderSide(
-                                    width: 2,
-                                    color: Theme.of(context).primaryColor)),
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.edit,
-                              size: 18,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
+                          child: new ProfileChange(
+                              user: widget.user, refresh: refreshData),
                           right: 0,
                           left: -width * 0.58,
                           bottom: height * 0.018,
