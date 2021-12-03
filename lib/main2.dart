@@ -34,16 +34,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _fetch();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _fetch();
+  // }
 
-  _fetch() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('user_id', 3);
-  }
+  // _fetch() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setInt('user_id', 3);
+  // }
 
   @override
   Widget build(BuildContext context) {
