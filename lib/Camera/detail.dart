@@ -21,30 +21,183 @@ class DetailPage2 extends StatefulWidget {
 }
 
 class _DetailState extends State<DetailPage2> {
-  _test() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  }
+  var _flag;
 
-  Future<List<Step_detail>> _getSteps() async {
-    final response = await http.get(
-      Uri.parse(
-          UrlPrefix.urls + "recipe/steps/all/" + widget.recipe.id.toString()),
+  _getLike() async {
+    print("get Like");
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    print("user_id:");
+    print(sharedPreferences.getInt("user_id"));
+
+    final response = await http.post(
+      Uri.parse(UrlPrefix.urls + "users/profile/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "user_id": sharedPreferences.getInt("user_id"),
+      }),
     );
     if (response.statusCode == 200) {
-      final Data = jsonDecode(utf8.decode(response.bodyBytes));
-      if (Data != null && mounted) {
-        for (var i = 0; i < Data.length; i++) {
-          Step_detail step = Step_detail(Data[i]["id"], Data[i]["num"],
-              Data[i]["contents"], Data[i]["img"], Data[i]["recipe_id"]);
+      final data = json.decode(response.body);
+      if (data != null && mounted) {
+        print("Bookmark: ");
+        print(data["bookmark"]);
+        print("Recipe ID: ");
+        print(widget.recipe.id);
 
-          steps.add(step);
+        for (var i = 0; i < data["bookmark"].length; i++) {
+          if (data["bookmark"][i] == widget.recipe.id) {
+            _flag = 1;
+            return;
+          }
         }
+        _flag = 0;
+        return;
       }
     } else {
       throw Exception();
     }
-    print("###");
-    print(steps.length);
+  }
+
+  Future _deleteBookmark() async {
+    var tem_data;
+
+    print("Delete Bookmark");
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    final response = await http.post(
+      Uri.parse(UrlPrefix.urls + "users/profile/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "user_id": sharedPreferences.getInt("user_id"),
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data != null && mounted) {
+        print("Before Bookmark: ");
+        print(data["bookmark"]);
+        print("Recipe ID: ");
+        print(widget.recipe.id);
+
+        for (var i = 0; i < data["bookmark"].length; i++) {
+          if (data["bookmark"][i] == widget.recipe.id) {
+            data["bookmark"].remove(widget.recipe.id);
+
+            print("After Bookmark: ");
+            print(data["bookmark"]);
+          }
+        }
+        tem_data = data["bookmark"];
+      }
+    } else {
+      throw Exception();
+    }
+
+    print("TEM DATA");
+    print(tem_data);
+    final response2 = await http.post(
+      Uri.parse(UrlPrefix.urls + "users/profile/update"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "user_id": sharedPreferences.getInt("user_id"),
+        "bookmark": tem_data
+      }),
+    );
+    if (response2.statusCode == 200) {
+      final data = json.decode(response2.body);
+      if (data != null && mounted) {
+        print("After Bookmark222 : ");
+        print(data["bookmark"]);
+      }
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future _insertBookmark() async {
+    var tem_data;
+
+    print("Insert Bookmark");
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    final response = await http.post(
+      Uri.parse(UrlPrefix.urls + "users/profile/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "user_id": sharedPreferences.getInt("user_id"),
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data != null && mounted) {
+        print("Before Bookmark: ");
+        print(data["bookmark"]);
+        print("Recipe ID: ");
+        print(widget.recipe.id);
+
+        data["bookmark"].add(widget.recipe.id);
+
+        tem_data = data["bookmark"];
+      }
+    } else {
+      throw Exception();
+    }
+
+    print("TEM DATA");
+    print(tem_data);
+    final response2 = await http.post(
+      Uri.parse(UrlPrefix.urls + "users/profile/update"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "user_id": sharedPreferences.getInt("user_id"),
+        "bookmark": tem_data
+      }),
+    );
+    if (response2.statusCode == 200) {
+      final data = json.decode(response2.body);
+      if (data != null && mounted) {
+        print("After Bookmark222 : ");
+        print(data["bookmark"]);
+      }
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<List<Step_detail>> _getSteps() async {
+    if (steps.length == 0) {
+      steps = [];
+      final response = await http.get(
+        Uri.parse(
+            UrlPrefix.urls + "recipe/steps/all/" + widget.recipe.id.toString()),
+      );
+      if (response.statusCode == 200) {
+        final Data = jsonDecode(utf8.decode(response.bodyBytes));
+        if (Data != null && mounted) {
+          for (var i = 0; i < Data.length; i++) {
+            Step_detail step = Step_detail(Data[i]["id"], Data[i]["num"],
+                Data[i]["contents"], Data[i]["img"], Data[i]["recipe_id"]);
+
+            steps.add(step);
+          }
+        }
+      } else {
+        throw Exception();
+      }
+      print("Steps Length: ");
+      print(steps.length);
+      return steps;
+    }
     return steps;
   }
 
@@ -71,24 +224,39 @@ class _DetailState extends State<DetailPage2> {
           ),
         ),
         actions: [
-          new IconButton(
-            onPressed: () async {
-              print("hihi!!!");
-              await _test();
-            },
-            icon: Icon(
-              Icons.favorite_border,
-              color: Colors.white,
-            ),
-            padding: EdgeInsets.only(right: 16),
-          ),
-          // Padding(
-          //   padding: EdgeInsets.only(right: 16),
-          //   child: Icon(
-          //     Icons.favorite_border,
-          //     color: Colors.white,
-          //   ),
-          // ),
+          FutureBuilder(
+              future: _getLike(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (_flag == 1) {
+                  return new IconButton(
+                    onPressed: () async {
+                      await _deleteBookmark();
+                      setState(() {
+                        _flag = 0;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                    ),
+                    padding: EdgeInsets.only(right: 16),
+                  );
+                } else {
+                  return new IconButton(
+                    onPressed: () async {
+                      await _insertBookmark();
+                      setState(() {
+                        _flag = 1;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.favorite_border,
+                      color: Colors.white,
+                    ),
+                    padding: EdgeInsets.only(right: 16),
+                  );
+                }
+              }),
         ],
       ),
       body: Container(
