@@ -75,13 +75,17 @@ void logout() async {
   }
 }
 
-void profileUpadte(String new_nick_name, [new_profile_image]) async {
+void profileUpadte(
+    {new_nick_name, new_profile_image, new_disliked, new_vegan}) async {
   try {
     int user_id = await getSharedPrefUser();
     Map<String, dynamic> body = {
       "user_id": user_id,
-      "nick_name": new_nick_name
     };
+
+    if (new_nick_name != null) {
+      body["nick_name"] = new_nick_name;
+    }
 
     if (new_profile_image != null) {
       final bytes = await Io.File(new_profile_image!.path).readAsBytes();
@@ -89,6 +93,14 @@ void profileUpadte(String new_nick_name, [new_profile_image]) async {
       body["profile_img"] = img64;
     }
 
+    if (new_disliked != null) {
+      body["disliked"] = new_disliked;
+    }
+
+    if (new_vegan != null) {
+      body["vegan"] = new_vegan;
+    }
+    print(json.encode(body));
     final response =
         await http.post(Uri.parse(UrlPrefix.urls + 'users/profile/update'),
             headers: <String, String>{

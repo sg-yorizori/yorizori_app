@@ -80,7 +80,9 @@ class ProfileChange extends StatelessWidget {
                             (newName.text != user.nick_name ||
                                 new_profile_image != null)) {
                           _formKey.currentState!.save();
-                          profileUpadte(newName.text, new_profile_image);
+                          profileUpadte(
+                              new_nick_name: newName.text,
+                              new_profile_image: new_profile_image);
                           refresh();
                           Navigator.pop(context);
                         }
@@ -148,10 +150,13 @@ class _pickProfileImageState extends State<pickProfileImage> {
           child: FloatingActionButton(
             onPressed: () async {
               new_profile_image = await getImageFromGallery();
-              setState(() {
-                profile_image = Image.file(File(new_profile_image.path)).image;
-              });
-              widget.setter(new_profile_image);
+              if (new_profile_image != null) {
+                setState(() {
+                  profile_image =
+                      Image.file(File(new_profile_image.path)).image;
+                });
+                widget.setter(new_profile_image);
+              }
             },
             shape: CircleBorder(
                 side: BorderSide(

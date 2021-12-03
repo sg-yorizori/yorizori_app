@@ -28,7 +28,7 @@ class UserPageState extends State<UserPage> {
   @override
   void initState() {
     super.initState();
-    saveSharedPrefList([2, 4, 8], "recent_view");
+    //saveSharedPrefList([2, 4, 8], "recent_view");
     // _initUser().whenComplete(() {
     //   setState(() {
     //     print("user_id" + user_id.toString());
@@ -49,8 +49,9 @@ class UserPageState extends State<UserPage> {
         await getRecipeList(flag: 1, recipe_list: saved_recent_view);
   }
 
-  refreshData() {
+  User refreshData() {
     setState(() {});
+    return user;
   }
 
   @override
@@ -118,7 +119,7 @@ class UserPageState extends State<UserPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               SizedBox(
-                                  height: height * 0.18,
+                                  height: height * 0.15,
                                   width: width,
                                   child: profileRow(context, user)),
                               Container(
@@ -131,12 +132,15 @@ class UserPageState extends State<UserPage> {
                                     Text(
                                       '👀 최근 본 레시피',
                                       style: TextStyle(
-                                          fontSize: width * 0.035,
+                                          fontSize: width * 0.037,
                                           color: Colors.white,
-                                          fontWeight: FontWeight.w500),
+                                          fontWeight: FontWeight.w600),
                                     )
                                   ],
                                 ),
+                              ),
+                              SizedBox(
+                                height: height * 0.007,
                               ),
                               recentViewWidget(width, height, recent_view_list)
                             ],

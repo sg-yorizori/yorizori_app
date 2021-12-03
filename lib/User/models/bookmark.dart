@@ -40,3 +40,22 @@ void deletBookmarkOrMyRecipe(int menu, int recipe_id) async {
     }
   }
 }
+
+void updateVeganStage(vegan_stage) async {
+  try {
+    int user_id = await getSharedPrefUser();
+    final response =
+        await http.delete(Uri.parse(UrlPrefix.urls + 'users/profile/update'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: json.encode({"user_id": user_id, "vegan": vegan_stage}));
+    if (response.statusCode == 204) {
+      print("updated vegan stage");
+    } else {
+      throw Exception('falied vegan stage');
+    }
+  } catch (e) {
+    print(e);
+  }
+}

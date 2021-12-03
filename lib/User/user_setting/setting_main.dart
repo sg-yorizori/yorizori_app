@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/User/models/step_unit.dart';
 import 'package:yorizori_app/User/models/user.dart';
 import 'package:yorizori_app/User/profile.dart';
-import 'package:yorizori_app/User/user_main.dart';
 import 'package:yorizori_app/User/user_setting/menu.dart';
 import 'package:yorizori_app/User/user_setting/profileChange.dart';
 import 'package:yorizori_app/main.dart';
@@ -17,11 +17,22 @@ class UserDetail extends StatefulWidget {
 }
 
 class _UserDetailState extends State<UserDetail> {
+  @override
+  void initState() {
+    super.initState();
+    setIngrdNameList().then((value) {
+      setState(() {});
+    });
+  }
+
+  List<String> disliked = [];
   refreshData() async {
     // var update = await getUser(context, widget.user.user_id);
     // widget.user = update[0];
-    // widget.mainRefresh();
-    setState(() {});
+    var user = widget.mainRefresh();
+    setState(() {
+      widget.user = user;
+    });
   }
 
   @override
@@ -29,6 +40,7 @@ class _UserDetailState extends State<UserDetail> {
     Size screenSize = MediaQuery.of(context).size;
     double width = screenSize.width;
     double height = screenSize.height;
+    //setIngrdNameList();
 
     return Scaffold(
         appBar: AppBar(
@@ -77,9 +89,10 @@ class _UserDetailState extends State<UserDetail> {
                 padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                 child: Column(
                   children: [
-                    setDisliked(context, width, height),
+                    setDisliked(context, width, height, disliked),
                     Divider(),
-                    setVeganStage(context, width, height),
+
+                    setVeganStage(context, width, height, widget.user.vegan),
                     /*
                     Divider(),
                     changePasswd(context, width, height),
@@ -96,12 +109,16 @@ class _UserDetailState extends State<UserDetail> {
                       },
                     ),
                     Divider(),
-                    deleteAccount(context, width, height),
+                    // deleteAccount(context, width, height),
                   ],
                 ),
               )
             ],
           ),
         ));
+  }
+
+  setIngrdNameList() async {
+    disliked = await getIngrdNameList(widget.user.disliked);
   }
 }
