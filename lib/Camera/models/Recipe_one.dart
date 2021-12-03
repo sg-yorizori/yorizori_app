@@ -57,3 +57,22 @@ Future<List<Recipe_One>> getRecipeList({user_id, flag, recipe_list}) async {
   }
   return recipeList;
 }
+
+Future<List<Recipe_One>> getRecipeSearchList(String search) async {
+  List<Recipe_One> recipeList = [];
+  try {
+    final response = await http.post(Uri.parse(UrlPrefix.urls + 'list/title/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode({"search": search}));
+    if (response.statusCode == 200) {
+      recipeList = await parseRecipeList(utf8.decode(response.bodyBytes));
+    } else {
+      throw Exception('falied get recipe list with ' + search);
+    }
+  } catch (e) {
+    print(e);
+  }
+  return recipeList;
+}
