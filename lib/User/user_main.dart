@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/Camera/detail.dart';
+import 'package:yorizori_app/Camera/models/Recipe_one.dart';
 import 'package:yorizori_app/User/list_view_UI.dart';
+import 'package:yorizori_app/User/models/bookmark.dart';
 import 'package:yorizori_app/User/recent_view.dart';
 import 'package:yorizori_app/sharedpref.dart';
-import 'package:yorizori_app/User/models/recipe.dart';
+//import 'package:yorizori_app/User/models/recipe.dart';
 import 'package:yorizori_app/User/profile.dart';
 import 'package:yorizori_app/User/user_setting/setting_main.dart';
 
@@ -12,22 +15,22 @@ class UserPage extends StatefulWidget {
   UserPage({Key? key}) : super(key: key);
 
   @override
-  _UserPageState createState() => _UserPageState();
+  UserPageState createState() => UserPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class UserPageState extends State<UserPage> {
   var user;
-  List<List<Recipe>> sub_recipe_list = [[], []];
-  List<Recipe> user_bookmark_list = [];
-  List<Recipe> user_upload_list = [];
+  List<List<Recipe_One>> sub_recipe_list = [[], []];
+  List<Recipe_One> user_bookmark_list = [];
+  List<Recipe_One> user_upload_list = [];
 
-  List<Recipe> recent_view_list = [];
+  List<Recipe_One> recent_view_list = [];
   int? user_id;
 
   @override
   void initState() {
     super.initState();
-    saveSharedPrefList([2, 4, 8], "recent_view");
+    //saveSharedPrefList([2, 4, 8], "recent_view");
     // _initUser().whenComplete(() {
     //   setState(() {
     //     print("user_id" + user_id.toString());
@@ -44,8 +47,20 @@ class _UserPageState extends State<UserPage> {
 
   _fetch() async {
     List<int> saved_recent_view = await getSharedPrefList("recent_view");
+    print("saved_recent_view");
+    print(saved_recent_view);
     recent_view_list =
         await getRecipeList(flag: 1, recipe_list: saved_recent_view);
+    recent_view_list = recent_view_list.reversed.toList();
+
+    for (int i = 0; i < recent_view_list.length; i++) {
+      print(recent_view_list[i].id);
+    }
+  }
+
+  User refreshData() {
+    setState(() {});
+    return user;
   }
 
   @override
@@ -58,10 +73,13 @@ class _UserPageState extends State<UserPage> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.of(context).push(_createRoute(user));
+                Navigator.of(context)
+                    .push(_createRoute(user, refreshData))
+                    .then((val) => val ? refreshData() : null);
               },
               icon: Icon(Icons.grid_view_rounded))
         ],
@@ -110,7 +128,8 @@ class _UserPageState extends State<UserPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               SizedBox(
-                                  height: height * 0.18,
+                                  height: height * 0.15,
+                                  width: width,
                                   child: profileRow(context, user)),
                               Container(
                                 height: height * 0.03,
@@ -120,11 +139,17 @@ class _UserPageState extends State<UserPage> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      '👀',
-                                      style: TextStyle(fontSize: width * 0.05),
+                                      '👀 최근 본 레시피',
+                                      style: TextStyle(
+                                          fontSize: width * 0.037,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600),
                                     )
                                   ],
                                 ),
+                              ),
+                              SizedBox(
+                                height: height * 0.007,
                               ),
                               recentViewWidget(width, height, recent_view_list)
                             ],
@@ -197,9 +222,13 @@ class _UserPageState extends State<UserPage> {
                                         .title),
                                     onDismissed: (direction) {
                                       setState(() {
+                                        deletBookmarkOrMyRecipe(
+                                            menuSelected,
+                                            sub_recipe_list[menuSelected][index]
+                                                .id);
+
                                         sub_recipe_list[menuSelected]
                                             .removeAt(index);
-                                        //TODO 삭제 request
                                       });
                                     },
                                     child: Container(
@@ -218,6 +247,16 @@ class _UserPageState extends State<UserPage> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: ListTile(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DetailPage2(
+                                                          sub_recipe_list[
+                                                                  menuSelected]
+                                                              [index])));
+                                        },
                                         title: Text(
                                             sub_recipe_list[menuSelected][index]
                                                 .title,
@@ -269,10 +308,10 @@ class _UserPageState extends State<UserPage> {
   }
 }
 
-Route _createRoute(user) {
+Route _createRoute(user, refresh) {
   return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          UserDetail(user: user),
+          UserDetail(user: user, mainRefresh: refresh),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(1.0, 0.0);
         var end = Offset.zero;

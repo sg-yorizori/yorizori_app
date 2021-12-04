@@ -12,6 +12,12 @@ Future<String> getSharedPrefToken() async {
   return token;
 }
 
+Future<int> getSharedPrefVegan() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int user_vegan = prefs.getInt("vegan") ?? 0;
+  return user_vegan;
+}
+
 void saveSharedPrefList(List<int> intList, String target) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> strList = intList.map((i) => i.toString()).toList();
@@ -34,7 +40,8 @@ void addSharedPrefList(int addValue, String target) async {
   if (intList.length > 5) {
     intList.removeAt(0);
   }
-
+  print("recent_view");
+  print(intList);
   List<String> strList = intList.map((i) => i.toString()).toList();
   prefs.setStringList(target, strList);
 }

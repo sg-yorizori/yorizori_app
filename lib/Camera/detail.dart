@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/sharedpref.dart';
 import 'package:yorizori_app/urls.dart';
 import 'package:http/http.dart' as http;
 
@@ -6,11 +7,10 @@ import 'dart:async';
 import 'dart:convert';
 import './models/step.dart';
 import './models/Recipe_one.dart';
-import './ingre_name_list.dart';
+// import './ingre_name_list.dart';
+import './models/unit.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-
-List<Step_detail> steps = [];
 
 class DetailPage2 extends StatefulWidget {
   DetailPage2(this.recipe);
@@ -22,6 +22,8 @@ class DetailPage2 extends StatefulWidget {
 
 class _DetailState extends State<DetailPage2> {
   var _flag;
+  List<Step_detail> steps = [];
+  List<Unit> units = [];
 
   _getLike() async {
     print("get Like");
@@ -176,6 +178,8 @@ class _DetailState extends State<DetailPage2> {
 
   Future<List<Step_detail>> _getSteps() async {
     if (steps.length == 0) {
+      setRecentView(widget.recipe.id);
+
       steps = [];
       final response = await http.get(
         Uri.parse(
@@ -196,9 +200,32 @@ class _DetailState extends State<DetailPage2> {
       }
       print("Steps Length: ");
       print(steps.length);
+
+      await _getUnit();
+
       return steps;
     }
     return steps;
+  }
+
+  _getUnit() async {
+    units = [];
+    final response = await http.get(
+      Uri.parse(
+          UrlPrefix.urls + "recipe/unit/all/" + widget.recipe.id.toString()),
+    );
+    if (response.statusCode == 200) {
+      final Data = jsonDecode(utf8.decode(response.bodyBytes));
+      if (Data != null && mounted) {
+        for (var i = 0; i < Data.length; i++) {
+          Unit unit = Unit(Data[i]["unit"], Data[i]["ingrd_name"]);
+
+          units.add(unit);
+        }
+      }
+    } else {
+      throw Exception();
+    }
   }
 
   @override
@@ -496,11 +523,8 @@ class _DetailState extends State<DetailPage2> {
   List<Widget> buildIngred(Recipe_One recipe) {
     List<Widget> list = [];
 
-    print("11111");
-    print(ingre_name_list.length);
-
-    for (var i = 0; i < ingre_name_list.length; i++) {
-      list.add(buildNutrition("test", ingre_name_list[i]));
+    for (var i = 0; i < units.length; i++) {
+      list.add(buildNutrition(units[i].unit, units[i].ingrd_name));
     }
     return list;
   }
@@ -544,24 +568,28 @@ class _DetailState extends State<DetailPage2> {
             width: 8,
           ),
           Container(
-              height: 45,
-              width: 60,
-              child: Center(
-                child: Icon(Icons.camera_alt_rounded,
-                    color: Colors.white, size: 35),
-              )
-
-              // child: Center(
-              //   child: Text(
-              //     amount,
-              //     style: TextStyle(
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.bold,
-              //       color: Colors.white,
-              //     ),
-              //   ),
-              // ),
-              ),
+            height: 45,
+            width: 60,
+            child: Center(
+              child: amount.length == 0
+                  ? Text(
+                      "적당히",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      amount,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+            ),
+          ),
         ],
       ),
     );
