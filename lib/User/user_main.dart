@@ -50,12 +50,8 @@ class UserPageState extends State<UserPage> {
     print("saved_recent_view");
     print(saved_recent_view);
     recent_view_list =
-        await getRecipeList(flag: 1, recipe_list: saved_recent_view);
+        await getRecipeList(flag: 0, recipe_list: saved_recent_view);
     recent_view_list = recent_view_list.reversed.toList();
-
-    for (int i = 0; i < recent_view_list.length; i++) {
-      print(recent_view_list[i].id);
-    }
   }
 
   User refreshData() {
@@ -151,7 +147,9 @@ class UserPageState extends State<UserPage> {
                               SizedBox(
                                 height: height * 0.007,
                               ),
-                              recentViewWidget(width, height, recent_view_list)
+                              recentView(
+                                recent_view_list: recent_view_list,
+                              )
                             ],
                           ),
                         ),
@@ -255,7 +253,12 @@ class UserPageState extends State<UserPage> {
                                                       DetailPage2(
                                                           sub_recipe_list[
                                                                   menuSelected]
-                                                              [index])));
+                                                              [index]))).then(
+                                              (value) {
+                                            setState(() {
+                                              _fetch();
+                                            });
+                                          });
                                         },
                                         title: Text(
                                             sub_recipe_list[menuSelected][index]
