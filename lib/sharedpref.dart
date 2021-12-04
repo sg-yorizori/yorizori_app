@@ -36,6 +36,11 @@ void addSharedPrefList(int addValue, String target) async {
   List<String>? savedStrList = prefs.getStringList(target) ?? [];
   List<int> intList = savedStrList.map((i) => int.parse(i)).toList();
 
+  for (int i = 0; i < intList.length; i++) {
+    if (addValue == intList[i]) {
+      intList.removeAt(i);
+    }
+  }
   intList.add(addValue);
   if (intList.length > 5) {
     intList.removeAt(0);
