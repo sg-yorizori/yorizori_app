@@ -94,7 +94,10 @@ class _CameraState extends State<Camera> {
         child: FutureBuilder(
           future: _getImageFromCam(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (image_cam == null) {
+            if (_flag == 0) {
+              return Container(
+                  child: Center(child: CircularProgressIndicator()));
+            } else if (image_cam == null) {
               return Container(child: Center(child: Text("No image !!")));
             } else {
               return Container(
@@ -218,8 +221,8 @@ class _CameraState extends State<Camera> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            print("ingre_name_list");
-            print(ingre_name_list);
+            // print("ingre_name_list");
+            // print(ingre_name_list);
             if (ingre_name_list.isEmpty == true) return;
             setState(() {
               Navigator.push(
