@@ -94,7 +94,10 @@ class _CameraState extends State<Camera> {
         child: FutureBuilder(
           future: _getImageFromCam(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (image_cam == null) {
+            if (_flag == 0) {
+              return Container(
+                  child: Center(child: CircularProgressIndicator()));
+            } else if (image_cam == null) {
               return Container(child: Center(child: Text("No image !!")));
             } else {
               return Container(
@@ -187,6 +190,29 @@ class _CameraState extends State<Camera> {
                             });
                       }),
                 ),
+                Align(
+                  alignment: Alignment(-0.9, 0.96),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      minimumSize: Size(0, 50),
+                      primary: Colors.deepOrangeAccent,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        ingre_name_list = [];
+                        _flag = 0;
+                        image_cam = null;
+                      });
+                    },
+                    child: Icon(
+                      Icons.camera_alt_rounded,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
+                ),
               ]));
             }
           },
@@ -195,7 +221,8 @@ class _CameraState extends State<Camera> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            print(ingre_name_list);
+            // print("ingre_name_list");
+            // print(ingre_name_list);
             if (ingre_name_list.isEmpty == true) return;
             setState(() {
               Navigator.push(
