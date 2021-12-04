@@ -31,7 +31,7 @@ class _recentViewState extends State<recentView> {
     Size screenSize = MediaQuery.of(context).size;
     double width = screenSize.width;
     double height = screenSize.height;
-    _fetch();
+    //_fetch();
     return ScrollConfiguration(
       behavior: NoGlow(),
       child: Container(

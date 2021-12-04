@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/User/models/recipe.dart';
 import 'package:yorizori_app/sharedpref.dart';
 import 'package:yorizori_app/urls.dart';
 import 'package:http/http.dart' as http;
@@ -179,6 +180,7 @@ class _DetailState extends State<DetailPage2> {
   Future<List<Step_detail>> _getSteps() async {
     if (steps.length == 0) {
       setRecentView(widget.recipe.id);
+      viewsUpdate(widget.recipe.id);
 
       steps = [];
       final response = await http.get(

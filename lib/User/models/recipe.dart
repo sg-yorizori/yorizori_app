@@ -69,14 +69,33 @@ Future<List<Recipe>> getRecipeList({user_id, flag, recipe_list}) async {
 
 Future<Recipe> getRecipe(int recipe_id) async {
   var recipe;
-  final response = await http
-      .get(Uri.parse(UrlPrefix.urls + "recipe/" + recipe_id.toString()));
-  if (response.statusCode == 200) {
-    Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-    recipe = Recipe.fromJson(data);
-  } else {
-    throw Exception(
-        'failed get User ' + recipe_id.toString()); //TODO exception handling...
+  try {
+    final response = await http
+        .get(Uri.parse(UrlPrefix.urls + "recipe/" + recipe_id.toString()));
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      recipe = Recipe.fromJson(data);
+    } else {
+      throw Exception('failed get User ' +
+          recipe_id.toString()); //TODO exception handling...
+    }
+  } catch (e) {
+    print(e);
   }
   return recipe;
+}
+
+void viewsUpdate(int recipe_id) async {
+  //69587
+  try {
+    final response = await http.get(Uri.parse(
+        UrlPrefix.urls + "recipe/views/" + recipe_id.toString() + "/"));
+    if (response.statusCode == 200) {
+      print("view update success");
+    } else {
+      throw Exception('falied view update of recipe' + recipe_id.toString());
+    }
+  } catch (e) {
+    print(e);
+  }
 }
