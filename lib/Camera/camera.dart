@@ -42,8 +42,8 @@ class _CameraState extends State<Camera> {
   Future _getImageFromCam() async {
     if (image_cam == null && _flag == 0) {
       var image =
-          await ImagePicker.platform.pickImage(source: ImageSource.camera);
-      // await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+          // await ImagePicker.platform.pickImage(source: ImageSource.camera);
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
         image_cam = image;
@@ -187,6 +187,29 @@ class _CameraState extends State<Camera> {
                             });
                       }),
                 ),
+                Align(
+                  alignment: Alignment(-0.9, 0.96),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      minimumSize: Size(0, 50),
+                      primary: Colors.deepOrangeAccent,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        ingre_name_list = [];
+                        _flag = 0;
+                        image_cam = null;
+                      });
+                    },
+                    child: Icon(
+                      Icons.camera_alt_rounded,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
+                ),
               ]));
             }
           },
@@ -195,6 +218,7 @@ class _CameraState extends State<Camera> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
+            print("ingre_name_list");
             print(ingre_name_list);
             if (ingre_name_list.isEmpty == true) return;
             setState(() {
