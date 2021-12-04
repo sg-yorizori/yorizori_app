@@ -221,8 +221,8 @@ class _CameraState extends State<Camera> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            print("ingre_name_list");
-            print(ingre_name_list);
+            // print("ingre_name_list");
+            // print(ingre_name_list);
             if (ingre_name_list.isEmpty == true) return;
             setState(() {
               Navigator.push(
