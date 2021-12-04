@@ -70,3 +70,45 @@ Future<List<Unit>> getUnitList(recipe_id) async {
   }
   return unitList;
 }
+
+class Ingrd {
+  int id;
+  String name;
+  Ingrd(this.id, this.name);
+  Ingrd.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'];
+}
+
+Future<List<String>> parsedIngrdList(String responseBody) async {
+  List<String> ingrdNameList = [];
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  List<Ingrd> IngrdList =
+      parsed.map<Ingrd>((json) => Ingrd.fromJson(json)).toList();
+  for (int i = 0; i < IngrdList.length; i++) {
+    ingrdNameList.add(IngrdList[i].name);
+  }
+  return ingrdNameList;
+}
+
+Future<List<String>> getIngrdNameList(List<int> ingrdIdList) async {
+  List<String> ingrdNameList = [];
+  try {
+    final response =
+        await http.post(Uri.parse(UrlPrefix.urls + 'recipe/ingrd/all/'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: json.encode({"flag": 2, "ingrd_List": ingrdIdList}));
+
+    if (response.statusCode == 200) {
+      ingrdNameList = await parsedIngrdList(utf8.decode(response.bodyBytes));
+      // print(ingrdNameList);
+    } else {
+      throw Exception('falied get Ingrd Name List');
+    }
+  } catch (e) {
+    print(e);
+  }
+  return ingrdNameList;
+}

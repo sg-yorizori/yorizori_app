@@ -25,10 +25,10 @@ class DataSearch extends SearchDelegate<String> {
     //acktions for app bar
     return [
       IconButton(
-          icon: Icon(Icons.clear), onPressed: () {
+          icon: Icon(Icons.clear),
+          onPressed: () {
             query = "";
-        }
-      )
+          })
     ];
   }
 
@@ -46,7 +46,7 @@ class DataSearch extends SearchDelegate<String> {
       child: Card(
         color: Colors.deepOrange,
         child: Center(
-        child: Text(query),
+          child: Text(query),
         ),
       ),
     );
@@ -55,29 +55,29 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     // show when someone searches for something
-    final suggestionList = query.isEmpty ? recentIngred : ingred.where((p)=>p.startsWith(query)).toList();
+    final suggestionList = query.isEmpty
+        ? recentIngred
+        : ingred.where((p) => p.startsWith(query)).toList();
 
     return ListView.builder(
-      itemBuilder: (context,index)=>ListTile(
-        onTap: (){
+      itemBuilder: (context, index) => ListTile(
+        onTap: () {
           showResults(context);
         },
         leading: Icon(Icons.food_bank),
-        title: RichText(text: TextSpan(
-          text: suggestionList[index].substring(0,query.length),
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold
-            ),
-          children: [TextSpan(
-            text: suggestionList[index].substring(query.length),
-            style: TextStyle(color: Colors.grey)
-          )]
+        title: RichText(
+          text: TextSpan(
+              text: suggestionList[index].substring(0, query.length),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              children: [
+                TextSpan(
+                    text: suggestionList[index].substring(query.length),
+                    style: TextStyle(color: Colors.grey))
+              ]),
         ),
-        ),
-    ),
+      ),
       itemCount: suggestionList.length,
     );
   }
-
 }

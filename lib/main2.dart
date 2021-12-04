@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yorizori_app/Camera/camera.dart';
 import 'package:yorizori_app/User/user_main.dart';
 //import 'package:yorizori_app/Recipe/recipe.dart';
@@ -11,21 +12,6 @@ import 'package:flutter/foundation.dart';
 // void main_2() {
 //   runApp(MyApp_2());
 // }
-
-class YorizoriApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
-      ),
-      //home: Home(),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -47,6 +33,17 @@ class _MyHomePageState extends State<MyHomePage> {
       _currentIndex = index;
     });
   }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _fetch();
+  // }
+
+  // _fetch() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setInt('user_id', 3);
+  // }
 
   @override
   Widget build(BuildContext context) {
