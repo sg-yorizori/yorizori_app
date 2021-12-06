@@ -75,6 +75,7 @@ flutter:
     - assets/images/white_background.png
     - assets/images/red_background.png
     - assets/images/wink.png
+    - assets/images/guide_image.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
