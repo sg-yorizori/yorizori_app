@@ -42,8 +42,8 @@ class _CameraState extends State<Camera> {
   Future _getImageFromCam() async {
     if (image_cam == null && _flag == 0) {
       var image =
-          //await ImagePicker.platform.pickImage(source: ImageSource.camera);
-          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+          await ImagePicker.platform.pickImage(source: ImageSource.camera);
+      // await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
         image_cam = image;
