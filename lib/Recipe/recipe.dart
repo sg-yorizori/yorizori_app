@@ -47,3 +47,7 @@ class RecipeList {
     );
   }
 }
+
+void addRecipeToList(String title, ){
+
+}

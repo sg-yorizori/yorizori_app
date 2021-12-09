@@ -80,8 +80,6 @@ class DetailPage extends StatelessWidget {
 
                   buildTextTitleVariation1(recipe.title),
 
-                  //buildTextSubTitleVariation1("조회수 " + recipe.views.toString() + "회"),
-                  //buildTextSubTitleVariation1_right("작성자 " + recipe.writer),
                   Padding(
                     padding: EdgeInsets.only(bottom: 8),
                     child: Row(
@@ -129,15 +127,27 @@ class DetailPage extends StatelessWidget {
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    //mainAxisAlignment: MainAxisAlignment.center,
                     children: [
 
                       buildTextTitleVariation2('재료', false),
 
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        decoration: BoxDecoration(
+                          color: Color(0xfffa4a0c),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        height: 1.5,
+                      ),
+
+                      SizedBox(
+                        height: 16,
+                      ),
+
                       Wrap(
                         direction: Axis.horizontal,
                         spacing: 20,
-                        runSpacing: 16,
+                        runSpacing: 10,
                         children:
                           buildIngred(recipe),
                       ),
@@ -162,6 +172,19 @@ class DetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildTextTitleVariation2('조리 순서', false),
+
+                  Container(
+                    margin: EdgeInsets.only(right: 20),
+                    decoration: BoxDecoration(
+                      color: Color(0xfffa4a0c),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    height: 1.5,
+                  ),
+
+                  SizedBox(
+                    height: 16,
+                  ),
 
                   Wrap(
                     direction: Axis.horizontal,

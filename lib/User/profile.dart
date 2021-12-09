@@ -13,7 +13,7 @@ Widget profileRow(context, User user) {
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white,
-            image: DecorationImage(
+             image: DecorationImage(
               image: user.profile_img == ''
                   ? AssetImage('assets/images/wink.png') as ImageProvider
                   : NetworkImage(user.profile_img),
