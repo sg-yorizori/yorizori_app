@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter/foundation.dart';
 
+import 'package:yorizori_app/Camera/route.dart';
+
 // void main_2() {
 //   runApp(MyApp_2());
 // }
@@ -26,7 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
 
   final List _title = ["YoriZori", "Camera", "User"];
-  final List<Widget> _menu = [Home(), Camera(), UserPage()];
+  final List<Widget> _menu = [Home(), CameraRoute(), UserPage()];
 
   void _onTap(int index) {
     setState(() {

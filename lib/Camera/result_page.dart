@@ -54,7 +54,14 @@ class _ResultPageState extends State<ResultPage> {
     if (response.statusCode == 200) {
       final Data = jsonDecode(utf8.decode(response.bodyBytes));
       if (Data != null && mounted) {
-        for (var i = 0; i < Data.length; i++) {
+        var len;
+        if (Data.length > 10)
+          len = 10;
+        else {
+          len = Data.length;
+        }
+        // for (var i = 0; i < Data.length; i++) {
+        for (var i = 0; i < len; i++) {
           var titleFromJson = Data[i]["title"];
           DateTime dateFromJson = DateTime.parse(Data[i]["created_date"]);
           var thumbFromJson = Data[i]["thumb"];
