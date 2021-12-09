@@ -21,7 +21,7 @@ class YorizoriApp extends StatelessWidget {
         primarySwatch: Colors.deepOrange,
       ),
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(title:'Yorizori'), //SplashScreen(),
+      home: SplashScreen(),
       routes: {
         'register': (context) => MyRegister(),
         'login': (context) => MyLogin(),
