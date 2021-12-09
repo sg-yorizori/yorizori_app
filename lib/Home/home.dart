@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:yorizori_app/Home/AddRecipe/addRecipe.dart';
 import 'dart:convert';
 import 'package:yorizori_app/Recipe/recipe.dart';
-import 'package:yorizori_app/Home/search.dart';
 import 'package:yorizori_app/Home/detail.dart';
 import 'package:yorizori_app/Home/textStyle.dart';
+import 'package:yorizori_app/Camera/models/Recipe_one.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yorizori_app/Home/dataFromAPI.dart';
 
+import '../sharedpref.dart';
+import 'Search/resultList.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -17,6 +23,43 @@ class Home extends StatefulWidget {
 }
 
 class _RecipeState extends State<Home> {
+  var user;
+
+  StreamController<String> streamController = StreamController<String>();
+
+  List<Recipe_One> main_popular_list = [];
+/* start
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  int menuSelected = 0;
+  final items = List.generate(5, (index) => "list $index");
+
+  // _initUser() async {
+  //   this.user_id = await getSharedPrefUser();
+  // }
+
+  _fetch() async {
+    List<int> saved_popular_view = await getSharedPopularList("popular_view");
+    print("saved_popular_view");
+    print(saved_popular_view);
+    main_popular_list =
+    await getRecipeList(flag: 1, recipe_list: saved_popular_view);
+    recent_popular_list = recent_popular_list.reversed.toList();
+
+    for (int i = 0; i < recent_popular_list.length; i++) {
+      print(recent_popular_list[i].id);
+    }
+  }
+
+  User refreshData() {
+    setState(() {});
+    return user;
+  } */ //end
+
+  TextEditingController controller = new TextEditingController();
 
   Future<List<RecipeList>> _getRecipes() async {
     String data = await rootBundle.loadString('assets/data.json');
@@ -67,27 +110,38 @@ class _RecipeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+
+    String search_title_data = "";
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+       /*
+        backgroundColor: Colors.deepOrangeAccent,
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Center(
             child: Text(
                 "재료와 레시피를 요리조리 찾아봐요",
-              style: TextStyle(color: Colors.grey[400])
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  color: Colors.white70,
+              ),
+
             ),
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search, color: Colors.black),
+            icon: Icon(Icons.search, color: Colors.white),
             onPressed: () {
               showSearch(context: context, delegate: DataSearch());
             }
           )
         ]
-        /*
+*/
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.deepOrangeAccent,
         title: Center(
+
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 15),
             width: 350,
@@ -95,18 +149,46 @@ class _RecipeState extends State<Home> {
               color: Colors.white,
                 borderRadius: BorderRadius.circular(20)
             ),
-            child: TextFormField(
+
+            child: TextField(
+              //focusNode: _focus,
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.go,
+              // onChanged: (text) {
+              //   //searchTitle(text);
+              //   //_streamSearch.add(text);
+              //
+              //   title_data = text;
+              //   resultList();
+              // },
+              onSubmitted: (String str) {
+                setState(() {
+
+                  search_title_data = str;
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: (context) =>
+                        resultList(search_title_data)));
+
+                  //resultList(search_title_data);
+
+                });
+              },
               decoration: InputDecoration(
-                //labelText: '재료와 레시피를 요리조리 찾아봐요',
+                hintText: '재료와 레시피를 요리조리 찾아봐요',
                 icon: Icon(Icons.search),
                 contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
 
               ),
             ),
+
+              //resultList(title_data);
+              //resultList(search_title_data);
           ),
-        ),*/
+        ), //
       ),
-      drawer: Drawer(),
 
       body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
@@ -114,6 +196,10 @@ class _RecipeState extends State<Home> {
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 10,
+                ),
+
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
@@ -128,7 +214,7 @@ class _RecipeState extends State<Home> {
                 ),
 
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
 
                 Container(
@@ -170,7 +256,7 @@ class _RecipeState extends State<Home> {
                 ),
 
                 Container(
-                  height: 190,
+                  height:400,
                   child: FutureBuilder(
                       future: _getRecipes(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -192,8 +278,14 @@ class _RecipeState extends State<Home> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(Icons.add, size: 30.0),
+          onPressed: () {
+            Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) =>
+                        AddPage()));
+          },
+          child: Icon(Icons.add, size: 30.0 ),
           backgroundColor: Colors.white,
           foregroundColor: Colors.deepOrangeAccent,
           shape: CircleBorder(side: BorderSide (color: Colors.deepOrangeAccent, width: 3.0))
@@ -282,7 +374,15 @@ class _RecipeState extends State<Home> {
   }
 
   Widget buildRecent(RecipeList recipe, int index){
-    return Container(
+    return GestureDetector(
+        onTap: () {
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) =>
+                  DetailPage(recipe)));
+    },
+    child: Container(
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -337,7 +437,9 @@ class _RecipeState extends State<Home> {
 
         ],
       ),
+    ),
     );
   }
 
 }
+
