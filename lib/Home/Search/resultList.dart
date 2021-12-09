@@ -190,14 +190,10 @@ class _searchTitle extends State<resultList> {
                     buildTextSubTitleVariation2("조회수 " + recipe.views.toString()),
 
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
 
                         buildBottomRecipe("레시피 보기"),
-
-                        Icon(
-                          Icons.favorite_border,
-                        )
 
                       ],
                     ),

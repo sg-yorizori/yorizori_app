@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yorizori_app/Home/textStyle.dart';
 import 'package:yorizori_app/User/models/recipe.dart';
 import 'package:yorizori_app/sharedpref.dart';
 import 'package:yorizori_app/urls.dart';
@@ -236,12 +237,15 @@ class _DetailState extends State<DetailPage2> {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.deepOrange,
+
         title: Text("레시피 보기",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white, //Color(0xffFA4A0C),
-            )),
+            )
+        ),
         centerTitle: true,
+
         elevation: 0,
         leading: GestureDetector(
           onTap: () {
@@ -289,7 +293,7 @@ class _DetailState extends State<DetailPage2> {
         ],
       ),
       body: Container(
-        margin: EdgeInsets.only(right: 16, left: 20),
+
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -398,6 +402,19 @@ class _DetailState extends State<DetailPage2> {
                                   ),
                                 ),
 
+                                Container(
+                                  margin: EdgeInsets.only(right: 20),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xfffa4a0c),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  height: 1.5,
+                                ),
+
+                                SizedBox(
+                                  height: 16,
+                                ),
+
                                 Wrap(
                                   direction: Axis.horizontal,
                                   spacing: 20,
@@ -424,13 +441,26 @@ class _DetailState extends State<DetailPage2> {
                             Padding(
                               padding: EdgeInsets.only(bottom: 16),
                               child: Text(
-                                '조리 순서!',
+                                '조리 순서',
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xffFA4A0C),
                                 ),
                               ),
+                            ),
+
+                            Container(
+                              margin: EdgeInsets.only(right: 20),
+                              decoration: BoxDecoration(
+                                color: Color(0xfffa4a0c),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              height: 1.5,
+                            ),
+
+                            SizedBox(
+                              height: 16,
                             ),
 
                             Wrap(
@@ -452,8 +482,6 @@ class _DetailState extends State<DetailPage2> {
   List<Widget> buildCookList(Recipe_One recipes) {
     List<Widget> list = [];
 
-    print(steps.length);
-
     for (var i = 0; i < steps.length; i++) {
       list.add(buildCook(steps[i].contents, steps[i].img, i + 1));
     }
@@ -468,7 +496,7 @@ class _DetailState extends State<DetailPage2> {
         borderRadius: BorderRadius.all(
           Radius.circular(20),
         ),
-        // boxShadow: [kBoxShadow],
+        boxShadow: [kBoxShadow],
       ),
       child: Row(children: [
         Container(

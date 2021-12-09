@@ -112,12 +112,15 @@ buildRecipeSubTitle(String text){
 }
 
 buildBottomRecipe(String text){
-  return Text(
-    text,
-    style: TextStyle(
-      fontSize: 16,
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
+  return Align(
+    alignment: Alignment.bottomRight,
+    child: Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
     ),
   );
 }
