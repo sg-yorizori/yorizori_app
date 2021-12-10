@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yorizori_app/Camera/detail.dart';
-import 'package:yorizori_app/Camera/ingre_name_list.dart';
 import 'package:yorizori_app/Camera/models/Recipe_one.dart';
-import 'package:yorizori_app/Home/detail.dart';
 import 'package:yorizori_app/urls.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,10 +24,6 @@ class resultList extends StatefulWidget {
 }
 
 class _searchTitle extends State<resultList> {
-/*
-  Future<String> _getinput() async {
-    return title_name;
-  } */
 
 /*
   @override
@@ -39,15 +33,10 @@ class _searchTitle extends State<resultList> {
   }*/
 
   Future<List<Recipe_One>> _getRecipes() async {
-    //var id;
     recipes = [];
     String search = '';
 
-    //print(widget.search_title_name);
     search = widget.search_title_name;
-    //print(search);
-
-    //search = title_name as String;
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
@@ -95,7 +84,6 @@ class _searchTitle extends State<resultList> {
           'failed get ID ') ; //TODO exception handling...
     }
 
-    //print(recipes[0].title);
     return recipes;
   }
 
@@ -137,7 +125,6 @@ class _searchTitle extends State<resultList> {
   }
 
   List<Widget> buildRecipes (List<Recipe_One> getRecipes){
-    //print(getRecipes.length);
     List<Widget> list = [];
     for (var i = 0; i < getRecipes.length; i++) {
       list.add(buildRecipe(getRecipes[i], i));
@@ -190,14 +177,10 @@ class _searchTitle extends State<resultList> {
                     buildTextSubTitleVariation2("조회수 " + recipe.views.toString()),
 
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
 
                         buildBottomRecipe("레시피 보기"),
-
-                        Icon(
-                          Icons.favorite_border,
-                        )
 
                       ],
                     ),

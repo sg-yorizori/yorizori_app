@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:yorizori_app/Camera/detail.dart';
 import 'package:yorizori_app/Home/AddRecipe/addRecipe.dart';
 import 'dart:convert';
 import 'package:yorizori_app/Recipe/recipe.dart';
@@ -10,10 +11,13 @@ import 'package:yorizori_app/Home/textStyle.dart';
 import 'package:yorizori_app/Camera/models/Recipe_one.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yorizori_app/Home/dataFromAPI.dart';
 
 import '../sharedpref.dart';
+import '../urls.dart';
 import 'Search/resultList.dart';
+
+List<Recipe_One> main_popular_list = [];
+List<Recipe_One> main_recent_list = [];
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -23,89 +27,104 @@ class Home extends StatefulWidget {
 }
 
 class _RecipeState extends State<Home> {
-  var user;
 
   StreamController<String> streamController = StreamController<String>();
 
-  List<Recipe_One> main_popular_list = [];
-/* start
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  int menuSelected = 0;
-  final items = List.generate(5, (index) => "list $index");
-
-  // _initUser() async {
-  //   this.user_id = await getSharedPrefUser();
-  // }
-
-  _fetch() async {
-    List<int> saved_popular_view = await getSharedPopularList("popular_view");
-    print("saved_popular_view");
-    print(saved_popular_view);
-    main_popular_list =
-    await getRecipeList(flag: 1, recipe_list: saved_popular_view);
-    recent_popular_list = recent_popular_list.reversed.toList();
-
-    for (int i = 0; i < recent_popular_list.length; i++) {
-      print(recent_popular_list[i].id);
-    }
-  }
-
-  User refreshData() {
-    setState(() {});
-    return user;
-  } */ //end
-
   TextEditingController controller = new TextEditingController();
 
-  Future<List<RecipeList>> _getRecipes() async {
-    String data = await rootBundle.loadString('assets/data.json');
-    final jsonData = json.decode(data);
-    //print(jsonData["1"]["recipe_image"][0]);
+  Future<List<Recipe_One>> showPopularRecipe() async {
+    main_popular_list = [];
 
-    List<RecipeList> recipes = [];
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    for (var i = 0; i < jsonData.length; i++) {
-      //print(jsonData["$i"]["recipe_image"][0]);
-      //List<String> mainImageList = jsonData[i.toString()]["main_image"];
+    Map<String, dynamic> body = {
+      "flag": 2,
+      "vegan": sharedPreferences.getInt("vegan"),
+      "disliked": sharedPreferences.getStringList("disliked"),
+    };
 
-      var mainImageFromJson = jsonData[i.toString()]["main_image"];
-      List<String> mainImageList = new List<String>.from(mainImageFromJson);
+    final response = await http.post(Uri.parse(UrlPrefix.urls + "recipe/list/"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
 
-      var ingredNameFromJson = jsonData[i.toString()]["ingred_name"];
-      List<String> ingredNameList = new List<String>.from(ingredNameFromJson);
+        body: json.encode(body));
 
-      var ingredAmountFromJson = jsonData[i.toString()]["ingred_amount"];
-      List<String> ingredAmountList = new List<String>.from(
-          ingredAmountFromJson);
+    if (response.statusCode == 200) {
+      final Data = jsonDecode(utf8.decode(response.bodyBytes));
+      if (Data != null && mounted) {
+        //user = User.fromJson(data);
+        for (var i = 0; i < Data.length; i++) {
+          var titleFromJson = Data[i]["title"];
+          DateTime dateFromJson = DateTime.parse(Data[i]["created_date"]);
+          var thumbFromJson = Data[i]["thumb"];
 
-      var recipeStepFromJson = jsonData[i.toString()]["recipe_step"];
-      List<String> recipeStepList = new List<String>.from(recipeStepFromJson);
+          // created_date = DateTime.parse(json['created_date']),
 
-      var recipeImageFromJson = jsonData[i.toString()]["recipe_image"];
-      List<String> recipeImageList = new List<String>.from(recipeImageFromJson);
-
-      RecipeList recipe = RecipeList(
-        title: jsonData[i.toString()]["title"],
-        mainImage: mainImageList,
-        ingredName: ingredNameList,
-        ingredAmount: ingredAmountList,
-        recipeStep: recipeStepList,
-        recipeImage: recipeImageList,
-        views: jsonData[i.toString()]["views"],
-        writer: jsonData[i.toString()]["writer"],
-      );
-      recipes.add(recipe);
+          Recipe_One recipe = Recipe_One(
+            Data[i]["id"],
+            titleFromJson,
+            dateFromJson,
+            Data[i]["views"],
+            thumbFromJson,
+            Data[i]["writer"],
+          );
+          main_popular_list.add(recipe);
+      }
+      }
+    } else {
+      throw Exception(
+          'failed get ID ') ; //TODO exception handling...
     }
-    //print(recipes[0].mainImage[0]);
-    //print(recipes[1].recipeImage[4]);
 
-    print(recipes.length);
+    return main_popular_list;
+  }
 
-    return recipes;
+  Future<List<Recipe_One>> showRecentRecipe() async {
+    main_recent_list = [];
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> body = {
+      "flag" : 3,
+      "vegan" : sharedPreferences.getInt("vegan"),
+      "disliked" : sharedPreferences.getStringList("disliked"),
+    };
+print(sharedPreferences.getInt("vegan"));
+    final response = await http.post(Uri.parse(UrlPrefix.urls + "recipe/list/"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+
+        body: json.encode(body));
+
+    if (response.statusCode == 200) {
+      final Data = jsonDecode(utf8.decode(response.bodyBytes));
+      //user = User.fromJson(data);
+      for (var i = 0; i < Data.length; i++) {
+        var titleFromJson = Data[i]["title"];
+        DateTime dateFromJson = DateTime.parse(Data[i]["created_date"]);
+        var thumbFromJson = Data[i]["thumb"];
+
+        // created_date = DateTime.parse(json['created_date']),
+
+        Recipe_One recipe = Recipe_One(
+          Data[i]["id"],
+          titleFromJson,
+          dateFromJson,
+          Data[i]["views"],
+          thumbFromJson,
+          Data[i]["writer"],
+        );
+
+        main_recent_list.add(recipe);
+      }
+    } else {
+      throw Exception(
+          'failed get ID ') ; //TODO exception handling...
+    }
+
+    return main_recent_list;
   }
 
   @override
@@ -115,29 +134,6 @@ class _RecipeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-       /*
-        backgroundColor: Colors.deepOrangeAccent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Center(
-            child: Text(
-                "재료와 레시피를 요리조리 찾아봐요",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  color: Colors.white70,
-              ),
-
-            ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
-            onPressed: () {
-              showSearch(context: context, delegate: DataSearch());
-            }
-          )
-        ]
-*/
         automaticallyImplyLeading: false,
         backgroundColor: Colors.deepOrangeAccent,
         title: Center(
@@ -151,7 +147,6 @@ class _RecipeState extends State<Home> {
             ),
 
             child: TextField(
-              //focusNode: _focus,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.go,
               // onChanged: (text) {
@@ -221,7 +216,7 @@ class _RecipeState extends State<Home> {
                   height: 350,
                   // child: Expanded(
                   child: FutureBuilder(
-                      future: _getRecipes(),
+                      future: showPopularRecipe(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.data == null) {
                           return Container(
@@ -258,7 +253,7 @@ class _RecipeState extends State<Home> {
                 Container(
                   height:400,
                   child: FutureBuilder(
-                      future: _getRecipes(),
+                      future: showRecentRecipe(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.data == null) {
                           return Container(
@@ -293,7 +288,7 @@ class _RecipeState extends State<Home> {
     );
   }
 
-  List<Widget> buildPopulars(List<RecipeList> getRecipes){
+  List<Widget> buildPopulars(List<Recipe_One> getRecipes){
     //print(getRecipes.length);
     List<Widget> list = [];
     for (var i = 0; i < getRecipes.length; i++) {
@@ -302,14 +297,14 @@ class _RecipeState extends State<Home> {
     return list;
   }
 
-  Widget buildPopular(RecipeList recipe, int index){
+  Widget buildPopular(Recipe_One recipe, int index){
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             new MaterialPageRoute(
                 builder: (context) =>
-                    DetailPage(recipe)));
+                    DetailPage2(recipe)));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -328,12 +323,12 @@ class _RecipeState extends State<Home> {
 
             Expanded(
               child: Hero(
-                tag: recipe.mainImage[0],
+                tag: recipe.thumb,
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(recipe.mainImage[0]),
-                      fit: BoxFit.contain,
+                      image: NetworkImage(recipe.thumb),
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -342,7 +337,7 @@ class _RecipeState extends State<Home> {
 
             buildRecipeTitle(recipe.title),
 
-            buildTextSubTitleVariation2("작성자 " + recipe.writer),
+            buildTextSubTitleVariation2("작성일자 " + recipe.created_date.toString()),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -351,7 +346,7 @@ class _RecipeState extends State<Home> {
                 buildBottomRecipe("조회수 " + recipe.views.toString() + " 회"),
 
                 Icon(
-                  Icons.favorite_border,
+                  Icons.call_made,
                 )
 
               ],
@@ -364,7 +359,7 @@ class _RecipeState extends State<Home> {
     );
   }
 
-  List<Widget> buildRecents (List<RecipeList> getRecipes){
+  List<Widget> buildRecents (List<Recipe_One> getRecipes){
     //print(getRecipes.length);
     List<Widget> list = [];
     for (var i = 0; i < getRecipes.length; i++) {
@@ -373,14 +368,14 @@ class _RecipeState extends State<Home> {
     return list;
   }
 
-  Widget buildRecent(RecipeList recipe, int index){
+  Widget buildRecent(Recipe_One recipe, int index){
     return GestureDetector(
         onTap: () {
       Navigator.push(
           context,
           new MaterialPageRoute(
               builder: (context) =>
-                  DetailPage(recipe)));
+                  DetailPage2(recipe)));
     },
     child: Container(
       margin: EdgeInsets.all(16),
@@ -399,7 +394,7 @@ class _RecipeState extends State<Home> {
             width: 160,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(recipe.mainImage[0]),
+                image: NetworkImage(recipe.thumb),
                 fit: BoxFit.fitHeight,
               ),
             ),
@@ -415,17 +410,13 @@ class _RecipeState extends State<Home> {
 
                   buildRecipeTitle(recipe.title),
 
-                  buildTextSubTitleVariation2("작성자 " + recipe.writer),
+                  buildTextSubTitleVariation2("조회수 " + recipe.views.toString() + " 회"),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
 
                       buildBottomRecipe("레시피 보기"),
-
-                      Icon(
-                        Icons.favorite_border,
-                      )
 
                     ],
                   ),

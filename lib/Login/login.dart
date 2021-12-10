@@ -71,7 +71,7 @@ class _MyLoginState extends State<MyLogin> {
         } else {
           throw Exception('failed get User ' + id.toString());
         }
-
+        prefs.setInt('vegan', user.vegan);
         saveSharedPrefList(user.bookmark, 'bookmark');
         saveSharedPrefList(user.disliked, 'disliked');
         prefs.setString('nick_name', user.nick_name);

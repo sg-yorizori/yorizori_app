@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yorizori_app/Camera/models/Recipe_one.dart';
 import 'dart:io' as Io;
 //import 'package:yorizori_app/User/models/recipe.dart';
@@ -79,6 +80,7 @@ void logout() async {
 void profileUpadte(
     {new_nick_name, new_profile_image, new_disliked, new_vegan}) async {
   try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     int user_id = await getSharedPrefUser();
     Map<String, dynamic> body = {
       "user_id": user_id,
@@ -100,6 +102,7 @@ void profileUpadte(
 
     if (new_vegan != null) {
       body["vegan"] = new_vegan;
+      prefs.setInt('vegan', new_vegan);
     }
     print(json.encode(body));
     final response =
