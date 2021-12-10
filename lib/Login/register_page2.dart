@@ -51,6 +51,8 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
         int id = await idGet(myToken.token);
         prefs.setInt('user_id', id);
 
+        print("vegan "+data['vegan'].toString());
+        //prefs.setInt('vegan',data['vegan']);
         print(id);
         prof_user_id = id;
         // ****
@@ -117,6 +119,7 @@ class _MyRegisterState_2 extends State<MyRegister_2> {
     saveSharedPrefList(user.bookmark, 'bookmark');
     saveSharedPrefList(user.disliked, 'disliked');
     prefs.setString('nick_name', user.nick_name);
+    prefs.setInt('vegan', user.vegan);
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 

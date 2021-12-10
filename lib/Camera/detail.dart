@@ -26,7 +26,12 @@ class _DetailState extends State<DetailPage2> {
   var _flag;
   List<Step_detail> steps = [];
   List<Unit> units = [];
-
+  @override
+  void initState() {
+    super.initState();
+    setRecentView(widget.recipe.id);
+    viewsUpdate(widget.recipe.id);
+  }
   _getLike() async {
     print("get Like");
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -180,8 +185,7 @@ class _DetailState extends State<DetailPage2> {
 
   Future<List<Step_detail>> _getSteps() async {
     if (steps.length == 0) {
-      setRecentView(widget.recipe.id);
-      viewsUpdate(widget.recipe.id);
+
 
       steps = [];
       final response = await http.get(
@@ -417,7 +421,7 @@ class _DetailState extends State<DetailPage2> {
 
                                 Wrap(
                                   direction: Axis.horizontal,
-                                  spacing: 20,
+                                  spacing: 25,
                                   runSpacing: 16,
                                   children: buildIngred(widget.recipe),
                                 ),

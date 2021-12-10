@@ -11,7 +11,6 @@ import 'package:yorizori_app/Home/textStyle.dart';
 import 'package:yorizori_app/Camera/models/Recipe_one.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yorizori_app/Home/dataFromAPI.dart';
 
 import '../sharedpref.dart';
 import '../urls.dart';
@@ -40,7 +39,7 @@ class _RecipeState extends State<Home> {
 
     Map<String, dynamic> body = {
       "flag": 2,
-      "vegan": 0,
+      "vegan": sharedPreferences.getInt("vegan"),
       "disliked": sharedPreferences.getStringList("disliked"),
     };
 
@@ -88,10 +87,10 @@ class _RecipeState extends State<Home> {
 
     Map<String, dynamic> body = {
       "flag" : 3,
-      "vegan" : 0,
+      "vegan" : sharedPreferences.getInt("vegan"),
       "disliked" : sharedPreferences.getStringList("disliked"),
     };
-
+print(sharedPreferences.getInt("vegan"));
     final response = await http.post(Uri.parse(UrlPrefix.urls + "recipe/list/"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -329,7 +328,7 @@ class _RecipeState extends State<Home> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(recipe.thumb),
-                      fit: BoxFit.contain,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -411,10 +410,10 @@ class _RecipeState extends State<Home> {
 
                   buildRecipeTitle(recipe.title),
 
-                  buildTextSubTitleVariation2("조회수 " + recipe.views.toString() + " 회회"),
+                  buildTextSubTitleVariation2("조회수 " + recipe.views.toString() + " 회"),
 
                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
 
                       buildBottomRecipe("레시피 보기"),

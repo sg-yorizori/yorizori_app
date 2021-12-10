@@ -46,7 +46,7 @@ class _ResultPageState extends State<ResultPage> {
       },
       body: jsonEncode({
         "flag": 4,
-        "vegan": 0,
+        "vegan": sharedPreferences.getInt("vegan"),
         "disliked": sharedPreferences.getStringList("disliked"),
         "search": search
       }),
