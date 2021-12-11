@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yorizori_app/Home/textStyle.dart';
 import 'package:yorizori_app/urls.dart';
 import 'package:http/http.dart' as http;
 import './ingre_name_list.dart';
@@ -216,30 +217,32 @@ class _ResultPageState extends State<ResultPage> {
   Widget buildRecipe(Recipe_One recipe_one, int index) {
     return GestureDetector(
       onTap: () {
-        print("!!!!");
-        print("here");
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => DetailPage2(recipe_one)),
         );
       },
       child: Container(
+        margin: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.deepOrangeAccent,
-          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+          boxShadow: [kBoxShadow],
         ),
         child: Row(children: [
           Container(
             height: 160,
             width: 160,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                 image: NetworkImage(recipe_one.thumb),
                 fit: BoxFit.fitHeight,
               ),
             ),
           ),
+
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -247,44 +250,22 @@ class _ResultPageState extends State<ResultPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        recipe_one.title,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    // Padding(
-                    //   padding: EdgeInsets.only(bottom: 8),
-                    //   child: Text(
-                    //     "작성자",
-                    //     overflow: TextOverflow.ellipsis,
-                    //     style: TextStyle(
-                    //       fontSize: 16,
-                    //       color: Colors.white,
-                    //     ),
-                    //   ),
-                    // ),
+
+                    buildRecipeTitle(recipe_one.title),
+
+                    buildTextSubTitleVariation2("조회수 " + recipe_one.views.toString()),
+
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          "레시피 보기",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Icon(Icons.search_rounded, size: 30)
+
+                        buildBottomRecipe("레시피 보기"),
+
                       ],
                     ),
-                  ]),
+
+                  ],
+              ),
             ),
           ),
         ]),

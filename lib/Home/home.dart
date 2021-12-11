@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:yorizori_app/Camera/detail.dart';
-import 'package:yorizori_app/Home/AddRecipe/addRecipe.dart';
+import 'package:yorizori_app/Home/AddRecipe/main_addRecipe.dart';
 import 'dart:convert';
 import 'package:yorizori_app/Recipe/recipe.dart';
 import 'package:yorizori_app/Home/detail.dart';
